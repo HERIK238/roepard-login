@@ -15,7 +15,7 @@ class AuthController {
     }
 
     public function login() {
-        if ($_SERVER["REQUEST_METHOD"] != "GET") {
+        if ($_SERVER["REQUEST_METHOD"] != "POST") {
             $this->sendResponse(['status' => 'error', 'message' => 'Método no permitido'], 405);
             return;
         }

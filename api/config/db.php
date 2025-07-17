@@ -1,6 +1,7 @@
 <?php
 // Credenciales de la base de datos
 return [
+    'driver' => 'mysql',
     'host' => 'roepard.ip-ddns.com',
     'dbname' => 'login',
     'port' => '3306',

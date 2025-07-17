@@ -5,9 +5,9 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
   <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
-  <link rel="stylesheet" href="./css/login.css">
-  <script src="./dist/jquery/js/jquery.min.js"></script>
-  <title>Login Page</title>
+  <link rel="stylesheet" href="../css/login.css">
+  <script src="../dist/jquery/js/jquery.min.js"></script>
+  <title>Auth Page</title>
 </head>
 
 <body>
@@ -16,11 +16,11 @@
       <form id="LoginForm">
         <h1>Login</h1>
         <div class="input-box">
-          <input type="text" name="username" placeholder="username" required>
+          <input type="text" name="username" placeholder="Username" required autocomplete="on">
           <i class='bx bxs-user'></i>
         </div>
         <div class="input-box">
-          <input type="password" name="password" placeholder="password" required>
+          <input type="password" name="password" placeholder="Password" required autocomplete="on">
           <i class='bx bxs-lock-alt'></i>
         </div>
         <div class="forget-link">
@@ -38,18 +38,30 @@
     </div>
 
     <div class="form-box register">
-      <form action="">
+      <form id="RegisterForm">
         <h1>Registerion</h1>
         <div class="input-box">
-          <input type="text" placeholder="Username" required>
+          <input type="text" id="first_name" placeholder="First Name" required autocomplete="on">
           <i class='bx bxs-user'></i>
         </div>
         <div class="input-box">
-          <input type="email" placeholder="Email" required>
+          <input type="text" id="last_name" placeholder="Last Name" required autocomplete="on">
+          <i class='bx bxs-user'></i>
+        </div>
+        <div class="input-box">
+          <input type="text" id="phone" placeholder="Phone" required autocomplete="on">
+          <i class='bx bxs-user'></i>
+        </div>
+        <div class="input-box">
+          <input type="text" id="username" placeholder="Username" required autocomplete="on">
+          <i class='bx bxs-user'></i>
+        </div>
+        <div class="input-box">
+          <input type="email" id="email" placeholder="Email" required autocomplete="on">
           <i class='bx bxs-envelope'></i>
         </div>
         <div class="input-box">
-          <input type="password" placeholder="password" required>
+          <input type="password" id="password" placeholder="Password" required autocomplete="on">
           <i class='bx bxs-lock-alt'></i>
         </div>
         <!-- <div class="forget-link">
@@ -80,6 +92,7 @@
       </div>
     </div>
   </div>
-  <script src="./js/login.js"></script>
-  <script src="./js/main.js"></script>
+  <script src="../js/login.js"></script>
+  <script src="../js/register.js"></script>
+  <script src="../js/main.js"></script>
 </body>
