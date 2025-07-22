@@ -10,6 +10,14 @@ login.addEventListener("click", () => {
     container.classList.remove("active");
 });
 
+$(function () {
+    $.get("../api/check_session.php", function (resp) {
+        if (resp.logged) {
+            window.location.href = "../views/home.html";
+        }
+    }, "json");
+});
+
 $(document).ready(function() {
     // Manejo del envío del formulario de inicio de sesión
     $('#LoginForm').submit(function (event) {
@@ -46,6 +54,7 @@ function LoginUser(username, password) {
         success: function (message) {
             if (message.status === "success") {
                 console.log("Correcto");
+                window.location.href = "../views/home.html";
             } else {
                 console.log("Error");
             }
