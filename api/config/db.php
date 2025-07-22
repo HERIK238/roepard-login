@@ -1,12 +1,17 @@
 <?php
-// Credenciales de la base de datos
+
+require_once __DIR__ . '/env.php';
+
+// Cargar el archivo .env
+EnvLoader::load(__DIR__ . '/../.env');
+
+// Retornar la configuración usando variables de entorno
 return [
-    'driver' => 'mysql',
-    'host' => 'roepard.ip-ddns.com',
-    'dbname' => 'login',
-    'port' => '3306',
-    'user' => 'login',
-    'password' => 'JEs@gxr64(S5x[fu',
-    'charset' => 'utf8mb4'
+    'driver' => EnvLoader::get('DB_CONNECTION'),
+    'host' => EnvLoader::get('DB_HOST'),
+    'dbname' => EnvLoader::get('DB_DATABASE'),
+    'port' => EnvLoader::get('DB_PORT'),
+    'user' => EnvLoader::get('DB_USERNAME'),
+    'password' => EnvLoader::get('DB_PASSWORD'),
+    'charset' => EnvLoader::get('DB_CHARSET')
 ];
-?>
