@@ -2,7 +2,7 @@ $(function () {
     $.get("../api/check_session.php", function (resp) {
         if (!resp.logged) {
             // No hay sesión, volver al login
-            window.location.href = "../views/auth.html";
+            window.location.href = "../index.html";
         } else {
             // Ya logeado -> seguir cargando la vista
         }
@@ -25,7 +25,7 @@ function LogoutUser() {
         success: function (response) {
             if (response.success === true) {
                 console.log(response.message);
-                window.location.href = "../views/auth.html";
+                window.location.href = "../index.html";
             } else if (response.success === false) {
                 console.log(response.message);
                 alert(response.message);
