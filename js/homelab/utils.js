@@ -12,7 +12,7 @@ class Utils {
     static getRandomSurfacePosition(surfacePos, radius = 2.5) {
         const offsetX = (Math.random() - 0.5) * radius;
         const offsetZ = (Math.random() - 0.5) * radius;
-        
+
         return {
             x: surfacePos.x + offsetX,
             y: surfacePos.y + 0.15,
@@ -28,9 +28,9 @@ class Utils {
         effect.style.width = '200px';
         effect.style.height = '200px';
         effect.style.borderRadius = '50%';
-        
+
         document.body.appendChild(effect);
-        
+
         setTimeout(() => {
             if (effect.parentNode) {
                 effect.parentNode.removeChild(effect);
@@ -77,14 +77,14 @@ class Utils {
             const corner = document.createElement('a-entity');
             const x = i % 2 === 0 ? -1.4 : 1.4;
             const z = i < 2 ? -1.4 : 1.4;
-            
+
             corner.setAttribute('geometry', 'primitive: cylinder; radius: 0.05; height: 0.1');
             corner.setAttribute('position', `${x} 0.05 ${z}`);
             corner.setAttribute('material', 'color: #00ff88; emissive: #003322');
             corner.setAttribute('animation',
                 `property: rotation; to: 0 360 0; loop: true; dur: ${3000 + i * 500}`);
             corner.setAttribute('light', 'type: point; color: #00ff88; intensity: 0.5; distance: 1');
-            
+
             surface.appendChild(corner);
         }
     }
@@ -107,7 +107,7 @@ class Utils {
     static calculateSurfacePosition(camera, distance = 2.5) {
         const cameraPos = camera.getAttribute('position');
         const cameraRot = camera.getAttribute('rotation');
-        
+
         return {
             x: cameraPos.x + Math.sin(cameraRot.y * Math.PI / 180) * distance,
             y: cameraPos.y - 1.3,

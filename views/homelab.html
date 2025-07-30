@@ -1,16 +1,13 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>🏠 HomeLab AR</title>
+    <title>🏠 HomeLab AR - Tu Laboratorio Virtual</title>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-    <script src="../dist/jquery/js/jquery.min.js"></script>
-    <script src="../js/homelab.js"></script>
     
     <!-- A-Frame y AR.js -->
-    <script src="https://aframe.io/releases/1.4.0/aframe.min.js"></script>
-    <script src="https://raw.githack.com/AR-js-org/AR.js/master/aframe/build/aframe-ar.js"></script>
+    <script src="../dist/aframe/aframe.min.js"></script>
+    <script src="../dist/aframe/aframe-ar.js"></script>
     
     <!-- Estilos -->
     <link rel="stylesheet" href="../css/homelab.css">
@@ -39,6 +36,13 @@
 
     <!-- Panel de controles -->
     <div class="controls hide" id="controls">
+        <div class="controls-header">
+            <div class="controls-title">🏠 HomeLab Control</div>
+            <button class="minimize-btn" onclick="toggleMenu()">
+                ✕ Minimizar
+            </button>
+        </div>
+        
         <div class="status-indicator" id="surface-status">
             🔍 Inicializando escáner de superficies...
         </div>
@@ -75,6 +79,28 @@
             <span id="current-category">Categoría: Servicios</span>
             <span id="surface-count">0 superficies</span>
         </div>
+    </div>
+
+    <!-- Botón de menú flotante -->
+    <button class="menu-toggle hide" id="menu-toggle" onclick="toggleMenu()">
+        ⚙️
+    </button>
+    
+    <!-- Indicador de menú -->
+    <div class="menu-indicator" id="menu-indicator">
+        Toca para abrir controles
+    </div>
+    
+    <!-- Indicador lateral cuando menú está cerrado -->
+    <div class="menu-closed-indicator" id="menu-closed-indicator">
+        CONTROLES OCULTOS
+    </div>
+    
+    <!-- Estadísticas rápidas -->
+    <div class="quick-stats hide" id="quick-stats">
+        <div id="quick-items">📦 0 elementos</div>
+        <div id="quick-surfaces">🎯 0 superficies</div>
+        <div id="quick-category">📂 Servicios</div>
     </div>
 
     <!-- Escena AR -->

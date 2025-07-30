@@ -56,7 +56,7 @@ const categoryConfig = {
     },
     pets: {
         name: 'Mascotas',
-        mixin: 'pet-base', 
+        mixin: 'pet-base',
         heightOffset: 0.15,
         rotationSpeed: 8000,
         hasFloat: true
