@@ -1,0 +1,12 @@
+/* Importa el archivo de fuentes */
+@import url('./fonts.css');
+
+/* Global colors */
+:root {
+    /* Colores verdes */
+    --uam-blue: #0069a3;
+    --uam-yellow: #f4d73b;
+    --uam-white: #ffffff;
+    --uam-black: #1a1a1a;
+    --uam-gray: #808080;
+}
