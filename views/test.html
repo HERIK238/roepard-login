@@ -4,8 +4,10 @@
 <head>
     <meta charset="utf-8">
     <title>Experiencia VR/AR Similar a Vision Pro</title>
+    <!-- Usamos una versión diferente de AR.js -->
     <script src="https://aframe.io/releases/1.2.0/aframe.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/ar.js@3.3.0/aframe/build/aframe-ar.min.js"></script>
+    <!-- Cambiamos la URL de AR.js -->
+    <script src="https://raw.githack.com/AR-js-org/AR.js/master/aframe/build/aframe-ar.min.js"></script>
     <style>
         body {
             margin: 0;
@@ -15,10 +17,18 @@
 </head>
 
 <body>
+    <!-- Botón para iniciar la experiencia (necesario para el AudioContext) -->
+    <button id="startBtn" style="position: absolute; top: 20px; left: 20px; z-index: 999;">Iniciar Experiencia</button>
+
     <!-- Modo VR -->
-    <a-scene id="vr-scene" vr-mode-ui="enabled: true;">
+    <a-scene id="vr-scene" vr-mode-ui="enabled: true;" style="display: none;">
         <a-assets>
-            <img id="sky" src="https://cdn.aframe.io/360-image-gallery-boilerplate/img/sechelt.jpg">
+            <!-- Añadimos crossorigin a la imagen -->
+            <img id="sky" src="https://cdn.aframe.io/360-image-gallery-boilerplate/img/sechelt.jpg"
+                crossorigin="anonymous">
+            <!-- Archivo de audio local o URL válida -->
+            <audio id="ambientSound" src="https://cdn.aframe.io/aframe/examples/boilerplate/sound/ambient.mp3"
+                crossorigin="anonymous"></audio>
         </a-assets>
         <a-sky src="#sky"></a-sky>
         <a-box position="-1 0.5 -3" rotation="0 45 0" color="#4CC3D9"></a-box>
@@ -26,14 +36,13 @@
         <a-cylinder position="1 0.75 -3" radius="0.5" height="1.5" color="#FFC65D"></a-cylinder>
         <a-plane position="0 0 -4" rotation="-90 0 0" width="4" height="4" color="#7BC8A4"></a-plane>
         <a-entity position="0 1.6 -3" text="value: Hello, VR World!; color: white"></a-entity>
-        <!-- Audio espacial -->
-        <a-entity
-            sound="src: url(https://cdn.aframe.io/aframe/examples/boilerplate/sound/ambient.mp3); positional: true; autoplay: true"
+        <!-- Audio espacial (iniciado después de la interacción del usuario) -->
+        <a-entity id="soundEntity" sound="src: #ambientSound; positional: true; autoplay: false"
             position="0 1.6 -3"></a-entity>
     </a-scene>
 
     <!-- Modo AR -->
-    <a-scene id="ar-scene" embedded arjs='trackingMethod: best; sourceType: webcam;'>
+    <a-scene id="ar-scene" embedded arjs='trackingMethod: best; sourceType: webcam;' style="display: none;">
         <a-marker preset="hiro">
             <a-box position="0 0.5 0" material="color: red;"></a-box>
         </a-marker>
@@ -41,13 +50,23 @@
     </a-scene>
 
     <script>
-        // Alternar entre VR y AR (esto es solo un ejemplo básico)
-        document.addEventListener('DOMContentLoaded', function () {
+        // Esperamos a que el usuario interactúe antes de iniciar la experiencia
+        document.getElementById('startBtn').addEventListener('click', function () {
             const vrScene = document.getElementById('vr-scene');
             const arScene = document.getElementById('ar-scene');
-            arScene.style.display = 'none'; // Mostrar VR por defecto
+            const startBtn = document.getElementById('startBtn');
 
-            // Ejemplo de cómo alternar entre VR y AR (en una aplicación real, esto sería más sofisticado)
+            // Ocultamos el botón de inicio
+            startBtn.style.display = 'none';
+
+            // Mostramos la escena VR por defecto
+            vrScene.style.display = 'block';
+
+            // Iniciamos el audio después de la interacción del usuario
+            const soundEntity = document.getElementById('soundEntity');
+            soundEntity.components.sound.playSound();
+
+            // Alternar entre VR y AR con teclas (opcional)
             window.addEventListener('keydown', function (e) {
                 if (e.key === 'v') { // Presionar 'v' para VR
                     vrScene.style.display = 'block';
