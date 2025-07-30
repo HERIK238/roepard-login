@@ -1,4 +1,4 @@
-// main.js  (ubicado en la raíz del proyecto)
+
 async function injectHTML(selector, url) {
     const resp = await fetch(url);
     if (!resp.ok) return;

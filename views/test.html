@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title>Experiencia VR/AR Similar a Vision Pro</title>
+    <script src="https://aframe.io/releases/1.2.0/aframe.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/ar.js@3.3.0/aframe/build/aframe-ar.min.js"></script>
+    <style>
+        body {
+            margin: 0;
+            overflow: hidden;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Modo VR -->
+    <a-scene id="vr-scene" vr-mode-ui="enabled: true;">
+        <a-assets>
+            <img id="sky" src="https://cdn.aframe.io/360-image-gallery-boilerplate/img/sechelt.jpg">
+        </a-assets>
+        <a-sky src="#sky"></a-sky>
+        <a-box position="-1 0.5 -3" rotation="0 45 0" color="#4CC3D9"></a-box>
+        <a-sphere position="0 1.25 -5" radius="1.25" color="#EF2D5E"></a-sphere>
+        <a-cylinder position="1 0.75 -3" radius="0.5" height="1.5" color="#FFC65D"></a-cylinder>
+        <a-plane position="0 0 -4" rotation="-90 0 0" width="4" height="4" color="#7BC8A4"></a-plane>
+        <a-entity position="0 1.6 -3" text="value: Hello, VR World!; color: white"></a-entity>
+        <!-- Audio espacial -->
+        <a-entity
+            sound="src: url(https://cdn.aframe.io/aframe/examples/boilerplate/sound/ambient.mp3); positional: true; autoplay: true"
+            position="0 1.6 -3"></a-entity>
+    </a-scene>
+
+    <!-- Modo AR -->
+    <a-scene id="ar-scene" embedded arjs='trackingMethod: best; sourceType: webcam;'>
+        <a-marker preset="hiro">
+            <a-box position="0 0.5 0" material="color: red;"></a-box>
+        </a-marker>
+        <a-entity camera></a-entity>
+    </a-scene>
+
+    <script>
+        // Alternar entre VR y AR (esto es solo un ejemplo básico)
+        document.addEventListener('DOMContentLoaded', function () {
+            const vrScene = document.getElementById('vr-scene');
+            const arScene = document.getElementById('ar-scene');
+            arScene.style.display = 'none'; // Mostrar VR por defecto
+
+            // Ejemplo de cómo alternar entre VR y AR (en una aplicación real, esto sería más sofisticado)
+            window.addEventListener('keydown', function (e) {
+                if (e.key === 'v') { // Presionar 'v' para VR
+                    vrScene.style.display = 'block';
+                    arScene.style.display = 'none';
+                } else if (e.key === 'a') { // Presionar 'a' para AR
+                    vrScene.style.display = 'none';
+                    arScene.style.display = 'block';
+                }
+            });
+        });
+    </script>
+</body>
+
+</html>
