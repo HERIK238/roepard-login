@@ -3,7 +3,7 @@
 require_once __DIR__ . '/env.php';
 
 // Cargar el archivo .env
-EnvLoader::load(__DIR__ . '/../.env');
+EnvLoader::load(__DIR__ . '/../../.env');
 
 // Retornar la configuración usando variables de entorno
 return [
