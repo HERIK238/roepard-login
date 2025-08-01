@@ -12,7 +12,7 @@ class User {
         $this->db = $dbConfig->getConnection();
     }
 
-    // Busca un usuario por credenciales
+    // Busca un usuario por credenciales    
     public function findByCredentials($input) {
         try {
             if (filter_var($input, FILTER_VALIDATE_EMAIL)) {

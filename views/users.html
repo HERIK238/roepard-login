@@ -5,27 +5,24 @@
     <meta charset="UTF-8">
     <title>Gestor de Usuarios</title>
     <!-- Bootstrap 5 CSS -->
-    <link href="/trsi/frontend/dist/bootstrap/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="../dist/bootstrap/css/bootstrap.min.css" rel="stylesheet" />
 
     <!-- DataTables Bootstrap 5 CSS -->
-    <link href="/trsi/frontend/dist/datatables/css/dataTables.bootstrap5.min.css" rel="stylesheet" />
+    <link href="../dist/datatables/css/dataTables.bootstrap5.min.css" rel="stylesheet" />
 
     <!-- FontAwesome -->
-    <link rel="stylesheet" href="/trsi/frontend/dist/fontawesome/css/fontawesome.min.css" />
+    <link rel="stylesheet" href="../dist/fontawesome/css/fontawesome.min.css" />
 
     <!-- Variables y estilos -->
-    <link rel="stylesheet" href="/trsi/frontend/css/variables.css" />
-    <link rel="stylesheet" href="/trsi/frontend/css/style.css" />
+    <link rel="stylesheet" href="../css/variables.css" />
+    <link rel="stylesheet" href="../css/users.css" />
     <!-- CSS de intl-tel-input -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/18.1.1/css/intlTelInput.css" />
     <!-- Icono -->
-    <link rel="icon" href="/trsi/favicon.ico" type="image/x-icon">
+    <link rel="icon" href="../favicon.ico" type="image/x-icon">
 </head>
 
 <body class="bg-white text-light">
-
-    <!-- Navbar -->
-    <?php include __DIR__ . '/../../frontend/components/navbar.php'; ?>
 
     <main class="container-fluid d-flex flex-column align-items-center justify-content-center"
         style="min-height: 80vh;">
@@ -57,7 +54,7 @@
                 </div>
             </div>
             <div class="d-flex justify-content-between w-100" style="max-width: 1100px;">
-                <a href="/trsi/frontend/pages/services.php"
+                <a href="../views/services.html"
                     class="btn btn-uam d-flex align-items-center justify-content-center"
                     style="font-size: 1.4rem; font-weight: bold; border-radius: 15px; width: 180px; height: 50px; padding: 0;">
                     Regresar
@@ -408,18 +405,18 @@
     </main>
 
     <!-- jQuery -->
-    <script src="/trsi/frontend/dist/jquery/js/jquery.min.js"></script>
+    <script src="../dist/jquery/js/jquery.min.js"></script>
     <!-- Bootstrap JS Bundle -->
-    <script src="/trsi/frontend/dist/bootstrap/js/bootstrap.bundle.js"></script>
+    <script src="../dist/bootstrap/js/bootstrap.bundle.js"></script>
     <!-- Chart.js -->
-    <script src="/trsi/frontend/dist/chart/js/chart.umd.min.js"></script>
+    <script src="../dist/chart/js/chart.umd.min.js"></script>
     <!-- FontAwesome -->
-    <script src="/trsi/frontend/dist/fontawesome/js/all.min.js"></script>
+    <script src="../dist/fontawesome/js/all.min.js"></script>
     <!-- DataTables JS -->
-    <script src="/trsi/frontend/dist/datatables/js/jquery.dataTables.min.js"></script>
-    <script src="/trsi/frontend/dist/datatables/js/dataTables.bootstrap5.min.js"></script>
+    <script src="../dist/datatables/js/jquery.dataTables.min.js"></script>
+    <script src="../dist/datatables/js/dataTables.bootstrap5.min.js"></script>
     <!-- JS personalizado -->
-    <script src="/trsi/frontend/js/users.js"></script>
+    <script src="../js/users.js"></script>
     <!-- JS de intl-tel-input -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/18.1.1/js/intlTelInput.min.js"></script>
     <!-- Utils para validación y formato -->

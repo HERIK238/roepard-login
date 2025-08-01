@@ -133,7 +133,7 @@ $(document).ready(function () {
     // Función para listar usuarios en DataTable
     async function ListUsers() {
         try {
-            const response = await fetch('/trsi/backend/api/list_users.php', {
+            const response = await fetch('../api/list_users.php', {
                 method: 'GET' // Método de la solicitud
             });
             const json = await response.json(); // Convertir respuesta a JSON
@@ -171,7 +171,7 @@ $(document).ready(function () {
     // Función para ver detalles del usuario
     window.verDetallesUsuario = function (user_id) {
         $.ajax({
-            url: '/trsi/backend/api/det_user.php',
+            url: '../api/det_user.php',
             method: 'POST',
             data: { user_id: user_id }, // Enviar ID del usuario
             dataType: 'json',
@@ -195,7 +195,7 @@ $(document).ready(function () {
         $('#confirmDeleteModal').modal('show'); // Mostrar modal de confirmación
         $('#confirmDeleteBtn').off('click').on('click', function () {
             $.ajax({
-                url: '/trsi/backend/api/delete_user.php',
+                url: '../api/delete_user.php',
                 method: 'POST',
                 data: { user_id: user_id }, // Enviar ID del usuario a eliminar
                 dataType: 'json',
@@ -236,7 +236,7 @@ $(document).ready(function () {
 
         // Enviar datos de creación al servidor
         $.ajax({
-            url: '/trsi/backend/api/cr_user.php', // URL del API
+            url: '../api/cr_user.php', // URL del API
             method: 'POST',
             data: formData,
             processData: false, // No procesar los datos
@@ -280,7 +280,7 @@ $(document).ready(function () {
 
         // Enviar datos de actualización al servidor
         $.ajax({
-            url: '/trsi/backend/api/up_user.php', // URL del API
+            url: '../api/up_user.php', // URL del API
             method: 'POST',
             data: formData,
             processData: false, // No procesar los datos

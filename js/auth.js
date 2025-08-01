@@ -1,3 +1,4 @@
+// Inicialización de variables y eventos para el manejo de autenticación
 const container = document.querySelector(".container");
 const register = document.querySelector(".register-btn");
 const login = document.querySelector(".login-btn");
@@ -14,6 +15,8 @@ $(function () {
     $.get("../api/check_session.php", function (resp) {
         if (resp.logged) {
             window.location.href = "../views/dashboard.html";
+        } else {
+            // window.location.href = "../index.html";
         }
     }, "json");
 });
@@ -69,7 +72,7 @@ function LoginUser(username, password) {
 $(document).ready(function() {
     $('#RegisterForm').submit(function (event) {
         event.preventDefault();
-        console.log("Register process started");
+        // console.log("Register process started");
         
         // Obtener valores del formulario usando IDs
         var first_name = $('#first_name').val().trim();

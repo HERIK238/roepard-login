@@ -11,9 +11,14 @@ $(function () {
 
 $(document).ready(function() {
     // Manejo del envío del formulario de inicio de sesión
-    $('.logout-btn').click(function (event) {
+    $('#logout-btn').click(function (event) {
         event.preventDefault(); 
         LogoutUser();
+    });
+
+    $('#homelab-btn').click(function (event) {
+        event.preventDefault();
+        window.location.href = "../views/homelab.html";
     });
     
 });

@@ -10,4 +10,5 @@ async function injectHTML(selector, url) {
     injectHTML('#footer-placeholder', '../ui/footer.html');
     injectHTML('#sidebar-placeholder', '../ui/sidebar.html');
     injectHTML('#modals-placeholder', '../components/modals.html');
+    injectHTML('#app-layout-placeholder', '../layout/app.html');
   });
