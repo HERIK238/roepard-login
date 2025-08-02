@@ -30,6 +30,10 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // Inicializar lista de páginas
     initializePagesList();
+
+    // Mostrar hora actual y actualizar cada segundo
+    mostrarHoraColombia();
+    setInterval(mostrarHoraColombia, 1000);
 });
 
 // Función principal para iniciar AR
@@ -75,6 +79,7 @@ function toggleMenu() {
     const menuToggle = document.getElementById('menu-toggle');
     const menuClosedIndicator = document.getElementById('menu-closed-indicator');
     const quickStats = document.getElementById('quick-stats');
+    const pagesPanel = document.getElementById('pages-panel'); // Panel de páginas
 
     menuExpanded = !menuExpanded;
 
@@ -86,6 +91,11 @@ function toggleMenu() {
         menuClosedIndicator.classList.remove('show');
         quickStats.classList.remove('show');
 
+        // Mostrar panel de páginas si la categoría actual es 'pages'
+        if (currentCategory === 'pages') {
+            pagesPanel.classList.remove('hide');
+        }
+
         // Efecto visual
         Utils.vibrate([50]);
 
@@ -95,6 +105,9 @@ function toggleMenu() {
         controls.classList.remove('expanded');
         menuToggle.innerHTML = '📱';
         menuToggle.classList.add('expanded');
+
+        // Ocultar panel de páginas cuando se contrae el menú
+        pagesPanel.classList.add('hide');
 
         // Mostrar indicadores laterales después de un momento
         setTimeout(() => {
@@ -160,40 +173,10 @@ function initializeCameraSystem() {
     });
 }
 
-// Seleccionar categoría de elementos
-function selectCategory(category) {
-    // Verificar categoría válida
-    if (!homelabItems[category]) {
-        console.warn(`⚠️ Categoría no válida: ${category}`);
-        return;
-    }
-
-    currentCategory = category;
-
-    // Actualizar botones de categoría
-    document.querySelectorAll('.category-btn').forEach(btn => {
-        btn.classList.remove('active');
-    });
-    document.getElementById(`cat-${category}`).classList.add('active');
-
-    // Actualizar texto de categoría actual
-    const categoryNames = {
-        services: 'Servicios',
-        pets: 'Mascotas',
-        games: 'Juegos',
-        tools: 'Herramientas'
-    };
-
-    document.getElementById('current-category').textContent =
-        `Categoría: ${categoryNames[category]}`;
-
-    // Aplicar efecto visual
-    Utils.applyGlitchEffect(document.getElementById(`cat-${category}`));
-
-    // Actualizar estadísticas rápidas
-    updateQuickStats();
-
-    console.log(`📂 Categoría seleccionada: ${category}`);
+// Función para ocultar manualmente el detector de superficie
+function hideSurfaceDetector() {
+    document.getElementById('surface-detector').classList.add('hide');
+    console.log('🔍 Detector de superficie oculto manualmente');
 }
 
 // Detectar superficie
@@ -211,6 +194,10 @@ async function detectSurface() {
     detectBtn.textContent = '🔄 Escaneando...';
 
     try {
+        // Mostrar detector de superficie
+        document.getElementById('surface-detector').classList.remove('hide');
+        console.log('🔍 Iniciando detección de superficie...');
+
         // Limpiar superficie anterior si existe
         if (currentSurface) {
             currentSurface.setAttribute('animation__fadeout',
@@ -227,6 +214,10 @@ async function detectSurface() {
         const detected = await system.simulateSurfaceDetection();
 
         if (detected) {
+            // Ocultar detector de superficie automáticamente
+            setTimeout(() => {
+                document.getElementById('surface-detector').classList.add('hide');
+            }, 1000);
             // Actualizar botón con éxito
             detectBtn.textContent = '✅ Superficie Lista';
 
@@ -425,6 +416,16 @@ function selectCategory(category) {
     console.log(`📂 Categoría seleccionada: ${category}`);
 }
 
+// Agregar función para mostrar hora actual
+function mostrarHoraColombia() {
+    // Obtener la hora actual en Colombia
+    const horaColombia = moment().tz("America/Bogota").format("HH:mm:ss YYYY-MM-DD Z");
+    const uamDate = document.getElementById("uam-date");
+    if (uamDate) {
+        uamDate.textContent = horaColombia;
+    }
+}
+
 // Desplegar elemento en superficie
 function deployItem() {
     // Verificar que haya superficie detectada
@@ -592,6 +593,8 @@ function startSelectionDetection() {
         currentSelectionTarget = null;
     }
 }
+
+
 
 // Manejo de errores globales
 window.addEventListener('error', (event) => {

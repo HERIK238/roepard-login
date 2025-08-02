@@ -30,7 +30,14 @@
     <div class="surface-detector hide" id="surface-detector">
       <div class="scanner-grid"></div>
       <div class="scanner-text">ESCANEANDO<br />SUPERFICIE</div>
+      <button class="close-detector-btn" onclick="hideSurfaceDetector()">✕</button>
     </div>
+
+    <!-- Agregar indicador de hora actual -->
+    <div class="time-display" id="time-display">
+        <span id="uam-date"></span>
+    </div>
+
 
     <!-- Panel de controles -->
     <div class="controls hide" id="controls">
