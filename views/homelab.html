@@ -1,205 +1,281 @@
 <!DOCTYPE html>
 <html>
-<head>
+  <head>
     <title>🏠 HomeLab AR - Tu Laboratorio Virtual</title>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
     <!-- A-Frame y AR.js actualizados -->
     <script src="../dist/aframe/aframe.min.js"></script>
     <script src="../dist/aframe/aframe-ar.js"></script>
-    
+
     <!-- Estilos -->
-    <link rel="stylesheet" href="../css/homelab.css">
-</head>
-<body>
+    <link rel="stylesheet" href="../css/homelab.css" />
+  </head>
+  <body>
     <!-- Overlay inicial -->
     <div class="overlay" id="overlay">
-        <div class="homelab-title">🏠 HomeLab AR</div>
-        <div class="subtitle">Tu laboratorio de hogar en realidad aumentada</div>
-        <p>Coloca servicios, mascotas y juegos en tu espacio real</p>
-        <button class="control-btn start-btn" onclick="startAR()">
-            🚀 Inicializar HomeLab AR
-        </button>
-        <div class="compatibility-info">
-            Compatible con Android e iOS • Sin marcadores físicos
-        </div>
+      <div class="homelab-title">🏠 HomeLab AR</div>
+      <div class="subtitle">Tu laboratorio de hogar en realidad aumentada</div>
+      <p>Coloca servicios, mascotas y juegos en tu espacio real</p>
+      <button class="control-btn start-btn" onclick="startAR()">
+        🚀 Inicializar HomeLab AR
+      </button>
+      <div class="compatibility-info">
+        Compatible con Android e iOS • Sin marcadores físicos
+      </div>
     </div>
-    
+
     <!-- Detector de superficie -->
     <div class="surface-detector hide" id="surface-detector">
-        <div class="scanner-grid"></div>
-        <div class="scanner-text">
-            ESCANEANDO<br>SUPERFICIE
-        </div>
+      <div class="scanner-grid"></div>
+      <div class="scanner-text">ESCANEANDO<br />SUPERFICIE</div>
     </div>
 
     <!-- Panel de controles -->
     <div class="controls hide" id="controls">
-        <div class="controls-header">
-            <div class="controls-title">🏠 HomeLab Control</div>
-            <button class="minimize-btn" onclick="toggleMenu()">
-                ✕ Minimizar
-            </button>
-        </div>
-        
-        <div class="status-indicator" id="surface-status">
-            🔍 Inicializando escáner de superficies...
-        </div>
-        
-        <div class="category-selector">
-            <button class="category-btn active" onclick="selectCategory('services')" id="cat-services">
-                🖥️ Servicios
-            </button>
-            <button class="category-btn" onclick="selectCategory('pets')" id="cat-pets">
-                🐾 Mascotas
-            </button>
-            <button class="category-btn" onclick="selectCategory('games')" id="cat-games">
-                🎮 Juegos
-            </button>
-            <button class="category-btn" onclick="selectCategory('tools')" id="cat-tools">
-                🔧 Herramientas
-            </button>
-        </div>
-        
-        <div class="main-controls">
-            <button class="control-btn" onclick="detectSurface()" id="detect-btn">
-                📡 Escanear Superficie
-            </button>
-            <button class="control-btn" onclick="deployItem()" id="deploy-btn" disabled>
-                🚀 Desplegar Item
-            </button>
-            <button class="control-btn" onclick="clearLab()">
-                🗑️ Reiniciar Lab
-            </button>
-        </div>
-        
-        <div class="info-panel">
-            <span id="item-count">0 elementos desplegados</span>
-            <span id="current-category">Categoría: Servicios</span>
-            <span id="surface-count">0 superficies</span>
-        </div>
+      <div class="controls-header">
+        <div class="controls-title">🏠 HomeLab Control</div>
+        <button class="minimize-btn" onclick="toggleMenu()">✕ Minimizar</button>
+      </div>
+
+      <div class="status-indicator" id="surface-status">
+        🔍 Inicializando escáner de superficies...
+      </div>
+
+      <div class="category-selector">
+        <button
+          class="category-btn active"
+          onclick="selectCategory('services')"
+          id="cat-services"
+        >
+          🖥️ Servicios
+        </button>
+        <button
+          class="category-btn"
+          onclick="selectCategory('pets')"
+          id="cat-pets"
+        >
+          🐾 Mascotas
+        </button>
+        <button
+          class="category-btn"
+          onclick="selectCategory('games')"
+          id="cat-games"
+        >
+          🎮 Juegos
+        </button>
+        <button
+          class="category-btn"
+          onclick="selectCategory('tools')"
+          id="cat-tools"
+        >
+          🔧 Herramientas
+        </button>
+        <button
+          class="category-btn"
+          onclick="selectCategory('pages')"
+          id="cat-pages"
+        >
+          📄 Páginas
+        </button>
+      </div>
+
+      <div class="main-controls">
+        <button class="control-btn" onclick="detectSurface()" id="detect-btn">
+          📡 Escanear Superficie
+        </button>
+        <button
+          class="control-btn"
+          onclick="deployItem()"
+          id="deploy-btn"
+          disabled
+        >
+          🚀 Desplegar Item
+        </button>
+        <button class="control-btn" onclick="clearLab()">
+          🗑️ Reiniciar Lab
+        </button>
+      </div>
+
+      <div class="info-panel">
+        <span id="item-count">0 elementos desplegados</span>
+        <span id="current-category">Categoría: Servicios</span>
+        <span id="surface-count">0 superficies</span>
+      </div>
+    </div>
+
+    <!-- Panel de páginas disponibles -->
+    <div class="pages-panel hide" id="pages-panel">
+      <div class="pages-header">📄 Páginas Disponibles</div>
+      <div class="pages-list" id="pages-list">
+        <!-- Las páginas se cargarán aquí dinámicamente -->
+      </div>
+    </div>
+
+    <!-- Indicador de selección -->
+    <div class="selection-indicator hide" id="selection-indicator">
+      <div class="selection-dot"></div>
+      <div class="selection-timer" id="selection-timer"></div>
     </div>
 
     <!-- Botón de menú flotante -->
     <button class="menu-toggle hide" id="menu-toggle" onclick="toggleMenu()">
-        ⚙️
+      ⚙️
     </button>
-    
+
     <!-- Indicador de menú -->
     <div class="menu-indicator" id="menu-indicator">
-        Toca para abrir controles
+      Toca para abrir controles
     </div>
-    
+
     <!-- Indicador lateral cuando menú está cerrado -->
     <div class="menu-closed-indicator" id="menu-closed-indicator">
-        CONTROLES OCULTOS
+      CONTROLES OCULTOS
     </div>
-    
+
     <!-- Estadísticas rápidas -->
     <div class="quick-stats hide" id="quick-stats">
-        <div id="quick-items">📦 0 elementos</div>
-        <div id="quick-surfaces">🎯 0 superficies</div>
-        <div id="quick-category">📂 Servicios</div>
+      <div id="quick-items">📦 0 elementos</div>
+      <div id="quick-surfaces">🎯 0 superficies</div>
+      <div id="quick-category">📂 Servicios</div>
     </div>
 
     <!-- Escena AR con WebXR -->
-    <a-scene 
-        id="scene"
-        embedded 
-        arjs="sourceType: webcam; debugUIEnabled: false; detectionMode: mono_and_matrix; matrixCodeType: 3x3;"
-        vr-mode-ui="enabled: true"
-        webxr="optionalFeatures: local-floor, hit-test; requiredFeatures: local;"
-        homelab-system>
-        
-        <!-- Assets -->
-        <a-assets>
-            <!-- Servicios HomeLab -->
-            <a-mixin id="service-base" 
-                geometry="primitive: box; width: 0.3; height: 0.3; depth: 0.3"
-                material="metalness: 0.8; roughness: 0.2"
-                shadow="cast: true; receive: true">
-            </a-mixin>
-            
-            <!-- Mascotas -->
-            <a-mixin id="pet-base"
-                geometry="primitive: sphere; radius: 0.15"
-                material="metalness: 0.1; roughness: 0.9"
-                shadow="cast: true; receive: true">
-            </a-mixin>
-            
-            <!-- Juegos -->
-            <a-mixin id="game-base"
-                geometry="primitive: cylinder; radius: 0.2; height: 0.1"
-                material="metalness: 0.5; roughness: 0.3"
-                shadow="cast: true; receive: true">
-            </a-mixin>
-            
-            <!-- Herramientas -->
-            <a-mixin id="tool-base"
-                geometry="primitive: octahedron; radius: 0.2"
-                material="metalness: 0.7; roughness: 0.4"
-                shadow="cast: true; receive: true">
-            </a-mixin>
-            
-            <!-- Superficie detectada -->
-            <a-mixin id="detected-surface"
-                geometry="primitive: plane; width: 3; height: 3"
-                material="color: #00ff88; opacity: 0.1; transparent: true; side: double"
-                shadow="receive: true">
-            </a-mixin>
-        </a-assets>
+    <a-scene
+      id="scene"
+      embedded
+      arjs="sourceType: webcam; debugUIEnabled: false; detectionMode: mono_and_matrix; matrixCodeType: 3x3;"
+      vr-mode-ui="enabled: true"
+      webxr="optionalFeatures: local-floor, hit-test; requiredFeatures: local;"
+      homelab-system
+    >
+      <!-- Assets -->
+      <a-assets>
+        <!-- Servicios HomeLab -->
+        <a-mixin
+          id="service-base"
+          geometry="primitive: box; width: 0.3; height: 0.3; depth: 0.3"
+          material="metalness: 0.8; roughness: 0.2; emissive: #000000"
+          shadow="cast: true; receive: true"
+        >
+        </a-mixin>
 
-        <!-- Cámara con raycaster -->
-        <a-entity 
-            id="cameraRig"
-            camera 
-            look-controls 
-            wasd-controls-enabled="false"
-            position="0 1.6 0"
-            raycaster="objects: .surface-target; far: 100; interval: 100">
-            
-            <!-- Cursor holográfico -->
-            <a-ring 
-                id="cursor"
-                geometry="radiusInner: 0.02; radiusOuter: 0.04"
-                material="color: #00ff88; opacity: 0.9"
-                position="0 0 -0.8"
-                animation="property: rotation; to: 0 0 360; loop: true; dur: 3000">
-                <a-ring
-                    geometry="radiusInner: 0.01; radiusOuter: 0.02"
-                    material="color: #ffffff; opacity: 0.7"
-                    animation="property: rotation; to: 0 0 -360; loop: true; dur: 2000">
-                </a-ring>
-            </a-ring>
-        </a-entity>
+        <!-- Mascotas -->
+        <a-mixin
+          id="pet-base"
+          geometry="primitive: sphere; radius: 0.15"
+          material="metalness: 0.1; roughness: 0.9; emissive: #000000"
+          shadow="cast: true; receive: true"
+        >
+        </a-mixin>
 
-        <!-- Plano de detección invisible -->
-        <a-plane 
-            id="detection-plane"
-            position="0 -1 -4" 
-            rotation="-90 0 0" 
-            width="20" 
-            height="20" 
-            color="#ffffff"
-            opacity="0"
-            class="surface-target">
-        </a-plane>
+        <!-- Juegos -->
+        <a-mixin
+          id="game-base"
+          geometry="primitive: cylinder; radius: 0.2; height: 0.1"
+          material="metalness: 0.5; roughness: 0.3; emissive: #000000"
+          shadow="cast: true; receive: true"
+        >
+        </a-mixin>
 
-        <!-- Contenedores -->
-        <a-entity id="surfaces-container"></a-entity>
-        <a-entity id="homelab-container"></a-entity>
+        <!-- Herramientas -->
+        <a-mixin
+          id="tool-base"
+          geometry="primitive: octahedron; radius: 0.2"
+          material="metalness: 0.7; roughness: 0.4; emissive: #000000"
+          shadow="cast: true; receive: true"
+        >
+        </a-mixin>
 
-        <!-- Iluminación ambiente tech -->
-        <a-light type="ambient" color="#001122" intensity="0.3"></a-light>
-        <a-light type="directional" position="3 6 3" color="#ffffff" intensity="0.8" shadow></a-light>
-        <a-light type="point" position="0 4 0" color="#00ff88" intensity="0.5" distance="10"></a-light>
+        <!-- Páginas -->
+        <a-mixin
+          id="page-base"
+          geometry="primitive: plane; width: 1.6; height: 0.9"
+          material="color: #ffffff; shader: flat"
+          shadow="receive: true"
+        >
+        </a-mixin>
+
+        <!-- Superficie detectada -->
+        <a-mixin
+          id="detected-surface"
+          geometry="primitive: plane; width: 3; height: 3"
+          material="color: #00ff88; opacity: 0.1; transparent: true; side: double"
+          shadow="receive: true"
+        >
+        </a-mixin>
+      </a-assets>
+
+      <!-- Cámara con raycaster -->
+      <a-entity
+        id="cameraRig"
+        camera
+        look-controls
+        wasd-controls-enabled="false"
+        position="0 1.6 0"
+        raycaster="objects: .surface-target, .interactive; far: 100; interval: 100"
+      >
+        <!-- Cursor holográfico -->
+        <a-ring
+          id="cursor"
+          geometry="radiusInner: 0.02; radiusOuter: 0.04"
+          material="color: #00ff88; opacity: 0.9"
+          position="0 0 -0.8"
+          animation="property: rotation; to: 0 0 360; loop: true; dur: 3000"
+        >
+          <a-ring
+            geometry="radiusInner: 0.01; radiusOuter: 0.02"
+            material="color: #ffffff; opacity: 0.7"
+            animation="property: rotation; to: 0 0 -360; loop: true; dur: 2000"
+          >
+          </a-ring>
+        </a-ring>
+      </a-entity>
+
+      <!-- Plano de detección invisible -->
+      <a-plane
+        id="detection-plane"
+        position="0 -1 -4"
+        rotation="-90 0 0"
+        width="20"
+        height="20"
+        color="#ffffff"
+        opacity="0"
+        class="surface-target"
+      >
+      </a-plane>
+
+      <!-- Contenedores -->
+      <a-entity id="surfaces-container"></a-entity>
+      <a-entity id="homelab-container"></a-entity>
+
+      <!-- Iluminación ambiente tech -->
+      <a-light type="ambient" color="#001122" intensity="0.3"></a-light>
+      <a-light
+        type="directional"
+        position="3 6 3"
+        color="#ffffff"
+        intensity="0.8"
+        shadow
+      ></a-light>
+      <a-light
+        type="point"
+        position="0 4 0"
+        color="#00ff88"
+        intensity="0.5"
+        distance="10"
+      ></a-light>
     </a-scene>
 
+    <!-- MomentJS -->
+    <script src="../dist/moment/js/moment.js"></script>
+    <script src="../dist/moment/js/moment-timezone-with-data.js"></script>
+
     <!-- Scripts -->
-    <script src="../js/homelab/homelab-data.js"></script>
-    <script src="../js/homelab/utils.js"></script>
-    <script src="../js/homelab/ar-system.js"></script>
-    <script src="../js/homelab/main.js"></script>
-</body>
+    <script src="../js/homelab-data.js"></script>
+    <script src="../js/utils.js"></script>
+    <script src="../js/ar-system.js"></script>
+    <script src="../js/main.js"></script>
+  </body>
 </html>

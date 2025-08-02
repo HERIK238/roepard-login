@@ -265,5 +265,135 @@ AFRAME.registerSystem('homelab', {
         Utils.vibrate([50, 100, 50]);
 
         console.log('🗑️ Laboratorio HomeLab reiniciado');
+    },
+
+        // Crear página interactiva en 3D
+     // Crear página interactiva en 3D
+    createInteractivePage: function(pageData, position) {
+        const page = document.createElement('a-entity');
+        page.setAttribute('position', position);
+        page.setAttribute('class', 'homelab-item interactive');
+        
+        // Marco de la página
+        const frame = document.createElement('a-box');
+        frame.setAttribute('width', '1.7');
+        frame.setAttribute('height', '1.0');
+        frame.setAttribute('depth', '0.1');
+        frame.setAttribute('color', '#333333');
+        frame.setAttribute('position', '0 0 -0.05');
+        
+        // Superficie de la página
+        const surface = document.createElement('a-entity');
+        surface.setAttribute('mixin', 'page-base');
+        surface.setAttribute('position', '0 0 0');
+        
+        // Agregar contenido de la página como textura
+        this.createPageContent(surface, pageData);
+        
+        // Etiqueta de la página
+        const label = Utils.createHolographicText(
+            `${pageData.emoji} ${pageData.name}`,
+            '0 0.6 0',
+            '1.5 1.5 1.5',
+            '#ffffff'
+        );
+        
+        // Sombra
+        const shadow = Utils.createShadow(0.8);
+        
+        page.appendChild(frame);
+        page.appendChild(surface);
+        page.appendChild(label);
+        page.appendChild(shadow);
+        
+        // Agregar evento de interacción
+        page.setAttribute('page-interaction', `url: ${pageData.url}`);
+        
+        document.getElementById('homelab-container').appendChild(page);
+        this.deployedItems.push({ element: page, category: 'pages', item: pageData });
+        
+        return page;
+    },
+    
+    // Crear contenido de página
+    createPageContent: function(surface, pageData) {
+        // Crear placeholder con información de la página
+        const placeholder = document.createElement('a-entity');
+        placeholder.setAttribute('geometry', 'primitive: plane; width: 1.5; height: 0.8');
+        placeholder.setAttribute('material', 'color: #1a1a1a');
+        placeholder.setAttribute('position', '0 0 0.01');
+        
+        // Título de la página
+        const title = document.createElement('a-text');
+        title.setAttribute('value', pageData.name);
+        title.setAttribute('align', 'center');
+        title.setAttribute('color', '#00ff88');
+        title.setAttribute('position', '0 0.2 0.02');
+        title.setAttribute('width', '1.4');
+        
+        // Descripción
+        const desc = document.createElement('a-text');
+        desc.setAttribute('value', pageData.description);
+        desc.setAttribute('align', 'center');
+        desc.setAttribute('color', '#cccccc');
+        desc.setAttribute('position', '0 -0.1 0.02');
+        desc.setAttribute('width', '1.4');
+        
+        // Icono
+        const icon = document.createElement('a-entity');
+        icon.setAttribute('geometry', 'primitive: circle; radius: 0.15');
+        icon.setAttribute('material', `color: ${pageData.color}`);
+        icon.setAttribute('position', '0 -0.3 0.02');
+        
+        placeholder.appendChild(title);
+        placeholder.appendChild(desc);
+        placeholder.appendChild(icon);
+        surface.appendChild(placeholder);
+    },
+});
+
+// Componente para interacción con páginas
+AFRAME.registerComponent('page-interaction', {
+    schema: {
+        url: { type: 'string', default: '' }
+    },
+    
+    init: function() {
+        this.el.setAttribute('class', 'interactive-page');
+        this.setupInteraction();
+    },
+    
+    setupInteraction: function() {
+        const el = this.el;
+        const data = this.data;
+        
+        // Evento de clic mejorado
+        el.addEventListener('click', function() {
+            if (data.url) {
+                try {
+                    // Intentar abrir en nueva pestaña
+                    const newWindow = window.open(data.url, '_blank');
+                    if (!newWindow) {
+                        // Si el popup blocker lo bloquea, mostrar mensaje
+                        console.warn('⚠️ Popup bloqueado, intentando redirección');
+                        window.location.href = data.url;
+                    }
+                } catch (error) {
+                    console.error('❌ Error al abrir página:', error);
+                    // Fallback: redirección en la misma ventana
+                    window.location.href = data.url;
+                }
+            }
+        });
+        
+        // Efecto de hover
+        el.setAttribute('event-set__mouseenter', {
+            '_event': 'mouseenter',
+            'scale': '1.05 1.05 1.05'
+        });
+        el.setAttribute('event-set__mouseleave', {
+            '_event': 'mouseleave',
+            'scale': '1 1 1'
+        });
     }
 });

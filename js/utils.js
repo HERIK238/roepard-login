@@ -116,26 +116,25 @@ class Utils {
     }
 
     // Crear elemento de texto holográfico
-    static createHolographicText(text, position, scale = '1.8 1.8 1.8', color = '#00ff88') {
-        const textEl = document.createElement('a-text');
-        textEl.setAttribute('value', text);
-        textEl.setAttribute('position', position);
-        textEl.setAttribute('align', 'center');
-        textEl.setAttribute('color', color);
-        textEl.setAttribute('scale', scale);
-        textEl.setAttribute('billboard', '');
-        textEl.setAttribute('material', 'shader: msdf; emissive: #003322');
-        return textEl;
+    static createHolographicText(text, position, scale, color = '#00ff88') {
+        const textEntity = document.createElement('a-text');
+        textEntity.setAttribute('value', text);
+        textEntity.setAttribute('position', position);
+        textEntity.setAttribute('scale', scale);
+        textEntity.setAttribute('color', color);
+        textEntity.setAttribute('align', 'center');
+        textEntity.setAttribute('font', 'roboto');
+        return textEntity;
     }
 
     // Crear sombra para elemento
-    static createShadow(radius = 0.3) {
-        const shadow = document.createElement('a-circle');
-        shadow.setAttribute('position', '0 -0.02 0');
+    static createShadow(scale = 1) {
+        const shadow = document.createElement('a-entity');
+        shadow.setAttribute('geometry', 'primitive: circle; radius: 0.25');
+        shadow.setAttribute('material', 'color: #000000; opacity: 0.3');
+        shadow.setAttribute('position', '0 -0.25 0');
+        shadow.setAttribute('scale', `${scale} ${scale} ${scale}`);
         shadow.setAttribute('rotation', '-90 0 0');
-        shadow.setAttribute('radius', radius.toString());
-        shadow.setAttribute('color', '#000000');
-        shadow.setAttribute('opacity', '0.4');
         return shadow;
     }
 
@@ -163,5 +162,16 @@ class Utils {
         while (container.firstChild) {
             container.removeChild(container.firstChild);
         }
+    }
+
+    static getRandomSurfacePosition(surfacePos, radius = 2.5) {
+        const offsetX = (Math.random() - 0.5) * radius;
+        const offsetZ = (Math.random() - 0.5) * radius;
+
+        return {
+            x: surfacePos.x + offsetX,
+            y: surfacePos.y + 0.15,
+            z: surfacePos.z + offsetZ
+        };
     }
 }

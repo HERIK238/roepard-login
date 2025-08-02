@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Configuración - HomeLab</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: linear-gradient(135deg, #2c3e50, #4a235a);
+            color: #fff;
+            min-height: 100vh;
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding: 20px;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 15px;
+        }
+        
+        .settings-section {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 25px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        .settings-section h3 {
+            color: #00ff88;
+            margin-top: 0;
+            border-bottom: 1px solid rgba(0, 255, 136, 0.3);
+            padding-bottom: 10px;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+        }
+        
+        .form-group input, 
+        .form-group select, 
+        .form-group textarea {
+            width: 100%;
+            padding: 12px;
+            border-radius: 8px;
+            border: 1px solid rgba(0, 255, 136, 0.5);
+            background: rgba(0, 0, 0, 0.3);
+            color: white;
+            font-size: 16px;
+        }
+        
+        .form-group input:focus, 
+        .form-group select:focus, 
+        .form-group textarea:focus {
+            outline: none;
+            border-color: #00ff88;
+            box-shadow: 0 0 10px rgba(0, 255, 136, 0.5);
+        }
+        
+        .toggle-switch {
+            position: relative;
+            display: inline-block;
+            width: 60px;
+            height: 34px;
+        }
+        
+        .toggle-switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+        
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #ccc;
+            transition: .4s;
+            border-radius: 34px;
+        }
+        
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 26px;
+            width: 26px;
+            left: 4px;
+            bottom: 4px;
+            background-color: white;
+            transition: .4s;
+            border-radius: 50%;
+        }
+        
+        input:checked + .slider {
+            background-color: #00ff88;
+        }
+        
+        input:checked + .slider:before {
+            transform: translateX(26px);
+        }
+        
+        .btn {
+            background: linear-gradient(45deg, #00ff88, #00cc6a);
+            color: #000;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: bold;
+            margin-right: 10px;
+            margin-top: 10px;
+        }
+        
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(0, 255, 136, 0.4);
+        }
+        
+        .btn-secondary {
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>⚙️ Configuración HomeLab</h1>
+        <p>Ajustes del sistema y preferencias</p>
+    </div>
+    
+    <div class="settings-section">
+        <h3>Configuración General</h3>
+        
+        <div class="form-group">
+            <label for="labName">Nombre del Laboratorio</label>
+            <input type="text" id="labName" value="Mi HomeLab AR">
+        </div>
+        
+        <div class="form-group">
+            <label for="theme">Tema Visual</label>
+            <select id="theme">
+                <option>Claro</option>
+                <option selected>Oscuro</option>
+                <option>Neón</option>
+                <option>Matrix</option>
+            </select>
+        </div>
+        
+        <div class="form-group">
+            <label>Notificaciones</label>
+            <label class="toggle-switch">
+                <input type="checkbox" checked>
+                <span class="slider"></span>
+            </label>
+        </div>
+    </div>
+    
+    <div class="settings-section">
+        <h3>Seguridad</h3>
+        
+        <div class="form-group">
+            <label for="password">Contraseña de Administrador</label>
+            <input type="password" id="password" value="••••••••">
+        </div>
+        
+        <div class="form-group">
+            <label>Autenticación de Dos Factores</label>
+            <label class="toggle-switch">
+                <input type="checkbox">
+                <span class="slider"></span>
+            </label>
+        </div>
+        
+        <div class="form-group">
+            <label for="backup">Frecuencia de Copias de Seguridad</label>
+            <select id="backup">
+                <option>Diaria</option>
+                <option selected>Semanal</option>
+                <option>Mensual</option>
+            </select>
+        </div>
+    </div>
+    
+    <div class="settings-section">
+        <h3>Red y Conectividad</h3>
+        
+        <div class="form-group">
+            <label for="hostname">Nombre de Host</label>
+            <input type="text" id="hostname" value="homelab-local">
+        </div>
+        
+        <div class="form-group">
+            <label for="port">Puerto HTTP</label>
+            <input type="number" id="port" value="8080">
+        </div>
+        
+        <div class="form-group">
+            <label>HTTPS</label>
+            <label class="toggle-switch">
+                <input type="checkbox" checked>
+                <span class="slider"></span>
+            </label>
+        </div>
+    </div>
+    
+    <div style="text-align: center; margin-top: 30px;">
+        <button class="btn">💾 Guardar Cambios</button>
+        <button class="btn btn-secondary">🔄 Restablecer</button>
+    </div>
+</body>
+</html>

@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - HomeLab</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: linear-gradient(135deg, #1a1a2e, #16213e);
+            color: #fff;
+            min-height: 100vh;
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding: 20px;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 15px;
+        }
+        
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        
+        .stat-card {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+            padding: 20px;
+            text-align: center;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        .stat-value {
+            font-size: 2.5em;
+            font-weight: bold;
+            color: #00ff88;
+            margin: 10px 0;
+        }
+        
+        .stat-label {
+            font-size: 1.1em;
+            opacity: 0.8;
+        }
+        
+        .services-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+        }
+        
+        .service-card {
+            background: rgba(0, 255, 136, 0.1);
+            border-radius: 10px;
+            padding: 15px;
+            text-align: center;
+            transition: transform 0.3s ease;
+        }
+        
+        .service-card:hover {
+            transform: translateY(-5px);
+            background: rgba(0, 255, 136, 0.2);
+        }
+        
+        .service-icon {
+            font-size: 2em;
+            margin-bottom: 10px;
+        }
+        
+        .service-name {
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+        
+        .service-status {
+            font-size: 0.9em;
+            padding: 3px 8px;
+            border-radius: 10px;
+            display: inline-block;
+        }
+        
+        .status-online {
+            background: rgba(0, 255, 136, 0.3);
+            color: #00ff88;
+        }
+        
+        .status-offline {
+            background: rgba(255, 68, 68, 0.3);
+            color: #ff4444;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>🏠 Dashboard HomeLab</h1>
+        <p>Panel de control del laboratorio virtual</p>
+    </div>
+    
+    <div class="stats-grid">
+        <div class="stat-card">
+            <div class="stat-label">Servicios Activos</div>
+            <div class="stat-value">12</div>
+            <div>de 15</div>
+        </div>
+        
+        <div class="stat-card">
+            <div class="stat-label">Uptime</div>
+            <div class="stat-value">99.8%</div>
+            <div>últimas 24h</div>
+        </div>
+        
+        <div class="stat-card">
+            <div class="stat-label">CPU</div>
+            <div class="stat-value">24%</div>
+            <div>carga promedio</div>
+        </div>
+        
+        <div class="stat-card">
+            <div class="stat-label">Memoria</div>
+            <div class="stat-value">6.2GB</div>
+            <div>usado de 16GB</div>
+        </div>
+    </div>
+    
+    <h2>Servicios Disponibles</h2>
+    <div class="services-grid">
+        <div class="service-card">
+            <div class="service-icon">🐳</div>
+            <div class="service-name">Docker</div>
+            <div class="service-status status-online">Online</div>
+        </div>
+        
+        <div class="service-card">
+            <div class="service-icon">🌐</div>
+            <div class="service-name">Nginx</div>
+            <div class="service-status status-online">Online</div>
+        </div>
+        
+        <div class="service-card">
+            <div class="service-icon">☁️</div>
+            <div class="service-name">Nextcloud</div>
+            <div class="service-status status-online">Online</div>
+        </div>
+        
+        <div class="service-card">
+            <div class="service-icon">🎬</div>
+            <div class="service-name">Plex</div>
+            <div class="service-status status-offline">Offline</div>
+        </div>
+    </div>
+</body>
+</html>

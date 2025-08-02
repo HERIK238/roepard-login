@@ -43,6 +43,29 @@ const homelabItems = {
         { name: "Code Editor", color: "#FF69B4", emoji: "📝", description: "Editor código" },
         { name: "Docker Compose", color: "#0db7ed", emoji: "🐋", description: "Orquestador" },
         { name: "Prometheus", color: "#E6522C", emoji: "🔥", description: "Métricas avanzadas" }
+    ],
+    pages: [
+        { 
+            name: "Dashboard", 
+            color: "#4A90E2", 
+            emoji: "📊", 
+            description: "Panel de control principal",
+            url: "../pages/dashboard.html"
+        },
+        { 
+            name: "Configuración", 
+            color: "#50E3C2", 
+            emoji: "⚙️", 
+            description: "Ajustes del sistema",
+            url: "../pages/settings.html"
+        },
+        { 
+            name: "Estadísticas", 
+            color: "#F5A623", 
+            emoji: "📈", 
+            description: "Datos y métricas",
+            url: "../pages/stats.html"
+        }
     ]
 };
 
@@ -72,6 +95,12 @@ const categoryConfig = {
         mixin: 'tool-base',
         heightOffset: 0.2,
         rotationSpeed: 15000
+    },
+    pages: {
+        name: 'Páginas',
+        mixin: 'page-base',
+        heightOffset: 0,
+        rotationSpeed: 0
     }
 };
 
@@ -104,5 +133,40 @@ const particleEffects = {
         maxAge: 3.5,
         size: 1.0,
         accelerationValue: '0 -0.05 0'
+    },
+    pages: {
+        preset: 'default',
+        particleCount: 20,
+        maxAge: 2,
+        size: 0.5,
+        accelerationValue: '0 0 0'
     }
 };
+
+// Páginas disponibles para mostrar
+const availablePages = [
+    {
+        id: 'dashboard',
+        title: '🏠 Panel Principal',
+        description: 'Dashboard del HomeLab',
+        file: 'dashboard.html'
+    },
+    {
+        id: 'settings',
+        title: '⚙️ Configuración',
+        description: 'Ajustes del sistema',
+        file: 'settings.html'
+    },
+    {
+        id: 'stats',
+        title: '📈 Estadísticas',
+        description: 'Métricas y datos',
+        file: 'stats.html'
+    },
+    {
+        id: 'logs',
+        title: '📝 Registros',
+        description: 'Logs del sistema',
+        file: 'logs.html'
+    }
+];

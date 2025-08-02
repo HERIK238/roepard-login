@@ -9,6 +9,9 @@ let menuExpanded = false;
 let menuIndicatorTimeout;
 let xrHitTestSource = null;
 let xrRefSpace = null;
+let selectionTimer = null;
+let selectionStartTime = null;
+let currentSelectionTarget = null;
 
 // Inicialización del sistema cuando se carga la página
 document.addEventListener('DOMContentLoaded', function () {
@@ -24,6 +27,9 @@ document.addEventListener('DOMContentLoaded', function () {
             console.log('ℹ️ WebXR no disponible, usando cámara estándar');
         });
     }
+
+    // Inicializar lista de páginas
+    initializePagesList();
 });
 
 // Función principal para iniciar AR
@@ -329,6 +335,261 @@ function clearLab() {
     } catch (error) {
         console.error('❌ Error al limpiar laboratorio:', error);
         alert('❌ Error al reiniciar laboratorio. Recarga la página si persiste.');
+    }
+}
+
+// Inicializar lista de páginas disponibles
+function initializePagesList() {
+    const pagesList = document.getElementById('pages-list');
+    pagesList.innerHTML = '';
+    
+    availablePages.forEach(page => {
+        const pageItem = document.createElement('div');
+        pageItem.className = 'page-item';
+        pageItem.dataset.pageId = page.id;
+        pageItem.innerHTML = `
+            <div class="page-title">${page.title}</div>
+            <div class="page-description">${page.description}</div>
+        `;
+        
+        pageItem.addEventListener('click', () => {
+            // Marcar como seleccionado
+            document.querySelectorAll('.page-item').forEach(item => {
+                item.classList.remove('selected');
+            });
+            pageItem.classList.add('selected');
+            
+            // Guardar selección
+            localStorage.setItem('selectedPage', page.id);
+        });
+        
+        pagesList.appendChild(pageItem);
+    });
+    
+    // Seleccionar la primera página por defecto
+    if (availablePages.length > 0) {
+        document.querySelector('.page-item').classList.add('selected');
+        localStorage.setItem('selectedPage', availablePages[0].id);
+    }
+}
+
+// Mostrar/ocultar panel de páginas
+function togglePagesPanel() {
+    const pagesPanel = document.getElementById('pages-panel');
+    pagesPanel.classList.toggle('hide');
+}
+
+
+// Seleccionar categoría de elementos
+function selectCategory(category) {
+    // Verificar categoría válida
+    if (!homelabItems[category]) {
+        console.warn(`⚠️ Categoría no válida: ${category}`);
+        return;
+    }
+
+    currentCategory = category;
+
+    // Actualizar botones de categoría
+    document.querySelectorAll('.category-btn').forEach(btn => {
+        btn.classList.remove('active');
+    });
+    document.getElementById(`cat-${category}`).classList.add('active');
+
+    // Actualizar texto de categoría actual
+    const categoryNames = {
+        services: 'Servicios',
+        pets: 'Mascotas',
+        games: 'Juegos',
+        tools: 'Herramientas',
+        pages: 'Páginas'
+    };
+
+    document.getElementById('current-category').textContent =
+        `Categoría: ${categoryNames[category]}`;
+
+    // Mostrar/ocultar panel de páginas según la categoría
+    const pagesPanel = document.getElementById('pages-panel');
+    if (category === 'pages') {
+        pagesPanel.classList.remove('hide');
+    } else {
+        pagesPanel.classList.add('hide');
+    }
+
+    // Aplicar efecto visual
+    Utils.applyGlitchEffect(document.getElementById(`cat-${category}`));
+
+    // Actualizar estadísticas rápidas
+    updateQuickStats();
+
+    console.log(`📂 Categoría seleccionada: ${category}`);
+}
+
+// Desplegar elemento en superficie
+function deployItem() {
+    // Verificar que haya superficie detectada
+    if (!surfaceDetected || !currentSurface) {
+        alert('❌ Primero escanea una superficie para desplegar elementos');
+        console.warn('⚠️ Intento de despliegue sin superficie detectada');
+        return;
+    }
+
+    // Verificar categoría válida
+    if (!homelabItems[currentCategory]) {
+        alert('❌ Categoría no válida seleccionada');
+        console.error('❌ Categoría inválida:', currentCategory);
+        return;
+    }
+
+    try {
+        // Obtener sistema AR
+        const system = document.querySelector('a-scene').systems['homelab'];
+        
+        // Para páginas, usar página seleccionada
+        if (currentCategory === 'pages') {
+            const selectedPageId = localStorage.getItem('selectedPage');
+            const selectedPage = availablePages.find(p => p.id === selectedPageId) || availablePages[0];
+            
+            if (!selectedPage) {
+                alert('❌ No hay páginas disponibles');
+                return;
+            }
+            
+            // Obtener posición en la superficie
+            const surfacePos = currentSurface.getAttribute('position');
+            const itemPosition = Utils.getRandomSurfacePosition(surfacePos, 1.5);
+            itemPosition.y += 0.5; // Ajustar altura para páginas
+            
+            // Crear página interactiva
+            const pageData = {
+                name: selectedPage.title.replace(/[^\w\s]/g, ''), // Remover emojis
+                emoji: selectedPage.title.match(/^[^\w\s]+/)?.[0] || '📄',
+                description: selectedPage.description,
+                color: '#4A90E2',
+                url: `../pages/${selectedPage.file}`
+            };
+            
+            const deployedElement = system.createInteractivePage(pageData, 
+                `${itemPosition.x} ${itemPosition.y} ${itemPosition.z}`);
+            
+        } else {
+            // Comportamiento normal para otras categorías
+            const deployedElement = system.createDeployedItem(currentCategory, currentSurface);
+        }
+
+        // Incrementar contador
+        itemCount++;
+        document.getElementById('item-count').textContent =
+            Utils.formatItemCount(itemCount);
+
+        // Actualizar estadísticas rápidas
+        updateQuickStats();
+
+        // Feedback táctil
+        Utils.vibrate([80, 40, 160]);
+
+        console.log(`🚀 Elemento desplegado: ${currentCategory}`);
+
+    } catch (error) {
+        console.error('❌ Error al desplegar elemento:', error);
+        alert('❌ Error al desplegar elemento. Inténtalo de nuevo.');
+    }
+}
+
+function startSelectionDetection() {
+    const scene = document.querySelector('a-scene');
+    const cursor = document.getElementById('cursor');
+    const selectionIndicator = document.getElementById('selection-indicator');
+    const selectionTimerEl = document.getElementById('selection-timer');
+    
+    // Evento cuando el cursor intersecta con un elemento
+    scene.addEventListener('raycaster-intersection', function(evt) {
+        const intersectedEl = evt.detail.els[0];
+        if (intersectedEl && intersectedEl.classList.contains('interactive')) {
+            currentSelectionTarget = intersectedEl;
+            selectionIndicator.classList.remove('hide');
+            
+            // Iniciar temporizador
+            selectionStartTime = Date.now();
+            updateSelectionTimer();
+            
+            // Iniciar actualización del temporizador
+            selectionTimer = setInterval(updateSelectionTimer, 100);
+        }
+    });
+    
+    // Evento cuando el cursor deja de intersectar
+    scene.addEventListener('raycaster-intersection-cleared', function(evt) {
+        clearSelectionTimer();
+        selectionIndicator.classList.add('hide');
+        currentSelectionTarget = null;
+    });
+    
+    // Función para actualizar el temporizador
+    function updateSelectionTimer() {
+        if (!selectionStartTime || !currentSelectionTarget) return;
+        
+        const elapsed = Date.now() - selectionStartTime;
+        const remaining = Math.max(0, 3000 - elapsed);
+        const seconds = Math.ceil(remaining / 1000);
+        
+        selectionTimerEl.textContent = `${seconds}s`;
+        
+        // Cambiar color según tiempo restante
+        const dot = document.querySelector('.selection-dot');
+        if (seconds <= 1) {
+            dot.style.background = '#ff4444';
+            dot.style.boxShadow = '0 0 15px #ff4444';
+        } else {
+            dot.style.background = '#00ff88';
+            dot.style.boxShadow = '0 0 15px #00ff88';
+        }
+        
+        // Activar selección después de 3 segundos
+        if (elapsed >= 3000) {
+            activateSelection();
+        }
+    }
+    
+    // Función para limpiar el temporizador
+    function clearSelectionTimer() {
+        if (selectionTimer) {
+            clearInterval(selectionTimer);
+            selectionTimer = null;
+        }
+        selectionStartTime = null;
+        selectionTimerEl.textContent = '';
+    }
+    
+    // Función para activar la selección
+    function activateSelection() {
+        if (!currentSelectionTarget) return;
+        
+        // Efecto visual
+        currentSelectionTarget.setAttribute('animation__select', {
+            property: 'scale',
+            to: '1.2 1.2 1.2',
+            dur: 200,
+            dir: 'alternate'
+        });
+        
+        // Activar el elemento (simular clic)
+        const clickEvent = new MouseEvent('click', {
+            view: window,
+            bubbles: true,
+            cancelable: true
+        });
+        currentSelectionTarget.dispatchEvent(clickEvent);
+        
+        // Feedback táctil
+        if (navigator.vibrate) {
+            navigator.vibrate([50, 50, 50]);
+        }
+        
+        // Limpiar selección
+        clearSelectionTimer();
+        selectionIndicator.classList.add('hide');
+        currentSelectionTarget = null;
     }
 }
 
