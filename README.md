@@ -1,7 +1,7 @@
 
-# 🚀 Proyecto TRSI
+# 🚀 Proyecto roepard-login
 
-Este es un proyecto para gestionar usuarios, tendencias y estadísticas.  
+Este es un proyecto para gestionar usuarios, tendencias y estadísticas y homelab-vr.
 Está construido con las siguientes tecnologías:
 
 - 🛢️ **MySQL** para la base de datos  
@@ -13,19 +13,18 @@ Está construido con las siguientes tecnologías:
 ## 🧩 Funcionalidades
 
 - 🔐 Panel de **Login** de usuarios  
+- 🔐 Panel de **Register** de usuarios
 - 🫂 Panel de **Gestión de usuarios**
 - 👤 Panel de **Usuario individual**
 - 💱 Panel de **Registro de cambios**
-- 🛜 Panel de **Verificación de conexiones**
-- 📊 Gráficos de **energia**  
-- 📊 Gráficos de **potencia**  
-- 📊 Gráficos de **consumo**
-- 📊 Gráficos de **velocidad**  
 
 ---
 
-## 🛜 Creado y depurado en **Linux Ubuntu 22.04.5 LTS x86_64**
+## 🛜 Creado y depurado en **Coolify** 🚀
 
+![Coolify](https://img.shields.io/badge/Coolify-2025-blue)
+
+- 📱 Ubuntu 22.04.1 LTS
 - 👤 Kernel 5.15.0-140-generic
 - 🔐 Apache2 Apache/2.4.52 (Ubuntu)
 - 📊 MySQL 10.6.22-MariaDB-0ubuntu0.22.04.1
@@ -36,10 +35,10 @@ Está construido con las siguientes tecnologías:
 ## 📁 Estructura del Proyecto
 
 ```bash
-/Proyecto-TRSI
+/roepard-login
 │
 ├── api                        # API del servidor
-├── config.php                 # Configuración del servidor
+├── config                   # Configuración del servidor
 ├── controllers                # Controladores del servidor
 ├── core                       # Core del servidor
 ├── middleware                 # Middleware del servidor
@@ -52,6 +51,6 @@ Está construido con las siguientes tecnologías:
 ├── fonts                      # Fuentes personalizadas
 ├── js                         # Lógica del frontend
 ├── pages                      # Páginas del frontend
-├── 404.php                        # Página de error 404
-└── index.html                      # Punto de entrada principal
+├── 404.html                   # Página de error 404
+└── index.html                 # Punto de entrada principal
 ```
