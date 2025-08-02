@@ -7,6 +7,8 @@ let currentCategory = 'services';
 let surfaces = [];
 let menuExpanded = false;
 let menuIndicatorTimeout;
+let xrHitTestSource = null;
+let xrRefSpace = null;
 
 // Inicialización del sistema cuando se carga la página
 document.addEventListener('DOMContentLoaded', function () {

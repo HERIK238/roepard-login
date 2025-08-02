@@ -7,7 +7,52 @@ AFRAME.registerSystem('homelab', {
         this.deployedItems = [];
         this.cameraEl = document.querySelector('[camera]');
         this.isScanning = false;
+        this.xrHitTestSource = null;
+        this.xrRefSpace = null;
         console.log('🏠 Sistema HomeLab AR inicializado');
+        
+        // Inicializar WebXR si está disponible
+        this.initWebXR();
+    },
+
+    // Inicializar WebXR
+    initWebXR: function() {
+        const sceneEl = this.el;
+        
+        if (!navigator.xr) return;
+        
+        sceneEl.addEventListener('enter-vr', () => {
+            console.log('🚪 Entrando a modo VR/WebXR');
+            this.setupXRHitTest();
+        });
+        
+        sceneEl.addEventListener('exit-vr', () => {
+            console.log('🚪 Saliendo de modo VR/WebXR');
+            this.xrHitTestSource = null;
+        });
+    },
+
+    // Configurar hit testing para WebXR
+    setupXRHitTest: function() {
+        const sceneEl = this.el;
+        const xrCamera = sceneEl.camera;
+        
+        if (!xrCamera) return;
+        
+        sceneEl.renderer.xr.getSession().then((session) => {
+            session.requestReferenceSpace('local').then((refSpace) => {
+                this.xrRefSpace = refSpace;
+                
+                session.requestHitTestSource({
+                    space: this.xrRefSpace
+                }).then((hitTestSource) => {
+                    this.xrHitTestSource = hitTestSource;
+                    console.log('🎯 WebXR Hit Test activo');
+                });
+            });
+        }).catch((e) => {
+            console.warn('⚠️ WebXR Hit Test no disponible:', e);
+        });
     },
 
     // Simular detección de superficie con fases realistas
@@ -51,7 +96,7 @@ AFRAME.registerSystem('homelab', {
     },
 
     // Crear superficie detectada con efectos holográficos
-    createDetectedSurface() {
+    createDetectedSurface: function() {
         const surfacePosition = Utils.calculateSurfacePosition(this.cameraEl);
 
         // Crear elemento principal de superficie
@@ -91,7 +136,7 @@ AFRAME.registerSystem('homelab', {
     },
 
     // Actualizar UI después de crear superficie
-    updateUIAfterSurfaceCreation() {
+    updateUIAfterSurfaceCreation: function() {
         document.getElementById('surface-status').innerHTML =
             '✅ <span class="surface-detected">Superficie HomeLab detectada y lista</span>';
         document.getElementById('deploy-btn').disabled = false;
@@ -105,7 +150,7 @@ AFRAME.registerSystem('homelab', {
     },
 
     // Crear elemento desplegado en superficie
-    createDeployedItem(category, surface) {
+    createDeployedItem: function(category, surface) {
         const item = Utils.getRandomItem(category);
         const config = Utils.getCategoryConfig(category);
         const surfacePos = surface.getAttribute('position');
@@ -142,7 +187,7 @@ AFRAME.registerSystem('homelab', {
     },
 
     // Agregar componentes visuales al elemento
-    addItemComponents(element, item, config) {
+    addItemComponents: function(element, item, config) {
         // Etiqueta principal
         const label = Utils.createHolographicText(
             `${item.emoji} ${item.name}`,
@@ -175,7 +220,7 @@ AFRAME.registerSystem('homelab', {
     },
 
     // Crear sistema de partículas
-    createParticleSystem(color, category) {
+    createParticleSystem: function(color, category) {
         const particles = document.createElement('a-entity');
         particles.setAttribute('position', '0 0.1 0');
 
@@ -194,7 +239,7 @@ AFRAME.registerSystem('homelab', {
     },
 
     // Limpiar laboratorio completo
-    clearLaboratory() {
+    clearLaboratory: function() {
         // Limpiar elementos desplegados
         Utils.clearDeployedItems();
         this.deployedItems = [];

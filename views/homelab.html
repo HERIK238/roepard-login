@@ -5,7 +5,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     
-    <!-- A-Frame y AR.js -->
+    <!-- A-Frame y AR.js actualizados -->
     <script src="../dist/aframe/aframe.min.js"></script>
     <script src="../dist/aframe/aframe-ar.js"></script>
     
@@ -103,12 +103,13 @@
         <div id="quick-category">📂 Servicios</div>
     </div>
 
-    <!-- Escena AR -->
+    <!-- Escena AR con WebXR -->
     <a-scene 
         id="scene"
         embedded 
         arjs="sourceType: webcam; debugUIEnabled: false; detectionMode: mono_and_matrix; matrixCodeType: 3x3;"
-        vr-mode-ui="enabled: false"
+        vr-mode-ui="enabled: true"
+        webxr="optionalFeatures: local-floor, hit-test; requiredFeatures: local;"
         homelab-system>
         
         <!-- Assets -->
