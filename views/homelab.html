@@ -158,9 +158,13 @@
       vr-mode-ui="enabled: true"
       webxr="optionalFeatures: local-floor, hit-test; requiredFeatures: local;"
       homelab-system
+      sound="src: #background-music; autoplay: true; loop: true; volume: 0.5"
     >
       <!-- Assets -->
       <a-assets>
+        <!-- Audio de fondo -->
+        <audio id="background-music" src="../assets/sounds/background_sfx.mp3" preload="auto" loop></audio>
+        
         <!-- Servicios HomeLab -->
         <a-mixin
           id="service-base"
