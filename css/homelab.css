@@ -117,19 +117,19 @@ body {
 
 .controls {
     position: fixed;
-    bottom: -280px;
-    left: 20px;
-    right: 20px;
+    bottom: -1000px; /* Oculto al inicio */
+    right: 20px;    /* Lo ubica en la esquina inferior derecha */
+    width: 300px;   /* Tamaño reducido */
     background: rgba(10, 10, 10, 0.95);
     border: 2px solid #00ff88;
     border-radius: 20px;
     padding: 20px;
     z-index: 1000;
-    text-align: center;
     color: white;
     backdrop-filter: blur(10px);
     transition: bottom 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-    box-shadow: 0 -10px 30px rgba(0, 255, 136, 0.2);
+    box-shadow: 0 0 30px rgba(0, 255, 136, 0.2);
+    text-align: left;
 }
 
 .controls.expanded {
