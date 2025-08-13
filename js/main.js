@@ -244,55 +244,6 @@ async function detectSurface() {
     }
 }
 
-// Desplegar elemento en superficie
-function deployItem() {
-    // Verificar que haya superficie detectada
-    if (!surfaceDetected || !currentSurface) {
-        alert('❌ Primero escanea una superficie para desplegar elementos');
-        console.warn('⚠️ Intento de despliegue sin superficie detectada');
-        return;
-    }
-
-    // Verificar categoría válida
-    if (!homelabItems[currentCategory]) {
-        alert('❌ Categoría no válida seleccionada');
-        console.error('❌ Categoría inválida:', currentCategory);
-        return;
-    }
-
-    try {
-        // Obtener sistema AR
-        const system = document.querySelector('a-scene').systems['homelab'];
-
-        // Crear elemento desplegado
-        const deployedElement = system.createDeployedItem(currentCategory, currentSurface);
-
-        // Incrementar contador
-        itemCount++;
-        document.getElementById('item-count').textContent =
-            Utils.formatItemCount(itemCount);
-
-        // Actualizar estadísticas rápidas
-        updateQuickStats();
-
-        // Obtener información del elemento para efectos
-        const item = Utils.getRandomItem(currentCategory);
-        const elementPos = deployedElement.getAttribute('position');
-
-        // Mostrar efecto de despliegue
-        Utils.showDeploymentEffect(elementPos, item.color);
-
-        // Feedback táctil
-        Utils.vibrate([80, 40, 160]);
-
-        console.log(`🚀 Elemento desplegado: ${item.name} (${currentCategory})`);
-
-    } catch (error) {
-        console.error('❌ Error al desplegar elemento:', error);
-        alert('❌ Error al desplegar elemento. Inténtalo de nuevo.');
-    }
-}
-
 // Limpiar laboratorio
 function clearLab() {
     // Confirmación del usuario
