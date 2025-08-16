@@ -57,7 +57,7 @@ function LoginUser(username, password) {
         success: function (message) {
             if (message.status === "success") {
                 console.log("Correcto");
-                window.location.href = "../views/dashboard.html";
+                window.location.href = "../views/dashboard.php";
             } else {
                 console.log("Error");
             }

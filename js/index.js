@@ -6,7 +6,7 @@ $(document).ready(function() {
             window.location.href = "../views/auth.html";
         } else {
             // Si está logueado, redirigir a dashboard
-            window.location.href = "../views/dashboard.html"; 
+            window.location.href = "../views/dashboard.php"; 
         }
     }, "json").fail(function() {
         // En caso de error en la solicitud, redirigir a auth
