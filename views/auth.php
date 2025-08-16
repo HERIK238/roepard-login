@@ -7,7 +7,10 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
-  <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+  <link href='../dist/boxicons/css/boxicons.min.css' rel='stylesheet'>
+  <link href='../dist/boxicons/css/animations.min.css' rel='stylesheet'>
+  <link href='../dist/boxicons/css/boxicons-brands.min.css' rel='stylesheet'>
+  <link href='../dist/boxicons/css/transformations.min.css' rel='stylesheet'>
   <link rel="stylesheet" href="../css/login.css">
   <!-- Icono -->
   <link rel="icon" href="../favicon.ico" type="image/x-icon" />
@@ -33,27 +36,27 @@
     <div class="form-box register">
       <form id="RegisterForm">
         <div class="input-box">
-          <input type="text" id="first_name" placeholder="First Name" required autocomplete="on">
+          <input type="text" id="first_name" placeholder="First Name" required autocomplete="off">
           <i class='bx bxs-user'></i>
         </div>
         <div class="input-box">
-          <input type="text" id="last_name" placeholder="Last Name" required autocomplete="on">
+          <input type="text" id="last_name" placeholder="Last Name" required autocomplete="off">
           <i class='bx bxs-user'></i>
         </div>
         <div class="input-box">
-          <input type="text" id="phone" placeholder="Phone" required autocomplete="on">
+          <input type="text" id="phone" placeholder="Phone" required autocomplete="off">
           <i class='bx bxs-user'></i>
         </div>
         <div class="input-box">
-          <input type="text" id="username" placeholder="Username" required autocomplete="on">
+          <input type="text" id="username" placeholder="Username" required autocomplete="off">
           <i class='bx bxs-user'></i>
         </div>
         <div class="input-box">
-          <input type="email" id="email" placeholder="Email" required autocomplete="on">
+          <input type="email" id="email" placeholder="Email" required autocomplete="off">
           <i class='bx bxs-envelope'></i>
         </div>
         <div class="input-box">
-          <input type="password" id="password" placeholder="Password" required autocomplete="on">
+          <input type="password" id="password" placeholder="Password" required autocomplete="off">
           <i class='bx bxs-lock-alt'></i>
         </div>
         <button type="submit" class="btn">Register</button>
