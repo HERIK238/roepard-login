@@ -2,7 +2,7 @@ $(function () {
     $.get("../api/check_session.php", function (resp) {
         if (!resp.logged) {
             // No hay sesión, volver al login
-            window.location.href = "../index.html";
+            window.location.href = "../index.php";
         } else {
             // Ya logeado -> seguir cargando la vista
         }
@@ -18,7 +18,7 @@ $(document).ready(function() {
 
     $('#homelab-btn').click(function (event) {
         event.preventDefault();
-        window.location.href = "../views/homelab.html";
+        window.location.href = "../views/homelab.php";
     });
     
 });
@@ -30,7 +30,7 @@ function LogoutUser() {
         success: function (response) {
             if (response.success === true) {
                 console.log(response.message);
-                window.location.href = "../index.html";
+                window.location.href = "../index.php";
             } else if (response.success === false) {
                 console.log(response.message);
                 alert(response.message);

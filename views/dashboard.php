@@ -17,9 +17,9 @@
 
 <body>
     <!-- Sidebar -->
-    <?php require_once('../ui/sidebar.html'); ?>
+    <?php require_once('../ui/sidebar.php'); ?>
     <!-- Footer -->
-    <?php require_once('../ui/footer.html'); ?>
+    <?php require_once('../ui/footer.php'); ?>
     <!-- Main JS -->
     <script src="../main.js"></script>
     <!-- Bootstrap JS With Popper-->

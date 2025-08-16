@@ -23,7 +23,7 @@ function LogoutUser() {
         success: function (response) {
             if (response.success === true) {
                 console.log(response.message);
-                window.location.href = "../index.html";
+                window.location.href = "../index.php";
             } else if (response.success === false) {
                 console.log(response.message);
                 alert(response.message);

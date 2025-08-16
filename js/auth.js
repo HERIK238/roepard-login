@@ -14,7 +14,7 @@ login.addEventListener("click", () => {
 $(function () {
     $.get("../api/check_session.php", function (resp) {
         if (resp.logged) {
-            window.location.href = "../views/dashboard.html";
+            window.location.href = "../views/dashboard.php";
         } else {
             // window.location.href = "../index.html";
         }
@@ -131,7 +131,7 @@ function RegisterUser(first_name, last_name, phone, username, email, password) {
             console.log("Response: ", response);
             if (response.status == "success") {
                 console.log("Register response: ", response.message);
-                window.location.href = "../views/dashboard.html";
+                window.location.href = "../views/dashboard.php";
             } else {
                 console.log(response.message);
             }
