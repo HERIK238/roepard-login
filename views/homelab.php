@@ -106,7 +106,6 @@
         </button>
         <button
           class="control-btn"
-          onclick="deployItem()"
           id="deploy-btn"
           disabled
         >

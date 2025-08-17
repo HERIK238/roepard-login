@@ -41,9 +41,9 @@ AFRAME.registerComponent('floating-menu', {
             {
                 label: 'Añadir Objeto',
                 color: '#00ffaa',
-                action: () => {
+                action: (event) => {
                     if (typeof deployItem === 'function') {
-                        deployItem();
+                        deployItem(event);
                     }
                 }
             },

@@ -138,11 +138,11 @@ const HomeLabConfig = {
             const userAgent = navigator.userAgent.toLowerCase();
             
             if (/mobile|android|iphone|ipad/.test(userAgent)) {
-                return this.devices.mobile;
+                return HomeLabConfig.devices.mobile;
             } else if (/vr|webxr/.test(userAgent)) {
-                return this.devices.vr;
+                return HomeLabConfig.devices.vr;
             } else {
-                return this.devices.desktop;
+                return HomeLabConfig.devices.desktop;
             }
         },
 
@@ -152,7 +152,7 @@ const HomeLabConfig = {
             
             return {
                 maxParticleCount: Math.min(
-                    this.performance.maxParticleCount,
+                    HomeLabConfig.performance.maxParticleCount,
                     deviceConfig.maxParticleCount
                 ),
                 shadowQuality: deviceConfig.shadowQuality,
@@ -164,15 +164,15 @@ const HomeLabConfig = {
         validateConfig() {
             const errors = [];
             
-            if (this.performance.maxDeployedItems < 1) {
+            if (HomeLabConfig.performance.maxDeployedItems < 1) {
                 errors.push('maxDeployedItems debe ser mayor a 0');
             }
             
-            if (this.ar.surfaceDetectionTimeout < 1000) {
+            if (HomeLabConfig.ar.surfaceDetectionTimeout < 1000) {
                 errors.push('surfaceDetectionTimeout debe ser al menos 1000ms');
             }
             
-            if (this.ui.animationDuration.menu < 100) {
+            if (HomeLabConfig.ui.animationDuration.menu < 100) {
                 errors.push('Duración de animación del menú debe ser al menos 100ms');
             }
             
@@ -219,7 +219,7 @@ const HomeLabConfig = {
         applyUIConfig() {
             // Aplicar colores del tema
             const root = document.documentElement;
-            Object.entries(this.ui.colors).forEach(([key, value]) => {
+            Object.entries(HomeLabConfig.ui.colors).forEach(([key, value]) => {
                 root.style.setProperty(`--color-${key}`, value);
             });
             
@@ -229,11 +229,11 @@ const HomeLabConfig = {
         // Aplicar configuración de efectos
         applyEffectsConfig() {
             // Configurar efectos según la configuración
-            if (!this.effects.particles.enabled) {
+            if (!HomeLabConfig.effects.particles.enabled) {
                 console.log('🔇 Sistema de partículas deshabilitado');
             }
             
-            if (!this.effects.audio.enabled) {
+            if (!HomeLabConfig.effects.audio.enabled) {
                 console.log('🔇 Audio deshabilitado');
             }
             
@@ -246,9 +246,9 @@ const HomeLabConfig = {
 if (typeof window !== 'undefined') {
     window.HomeLabConfig = HomeLabConfig;
     
-    // Aplicar configuración automáticamente
+    // Aplicar configuración automáticamente con contexto correcto
     window.addEventListener('load', () => {
-        HomeLabConfig.utils.applyConfig();
+        HomeLabConfig.utils.applyConfig.call(HomeLabConfig.utils);
     });
 }
 

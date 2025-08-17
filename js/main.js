@@ -29,6 +29,9 @@ document.addEventListener('DOMContentLoaded', function () {
     // Inicializar lista de páginas
     initializePagesList();
 
+    // Configurar event listeners para botones
+    setupEventListeners();
+
     // Mostrar hora actual y actualizar cada segundo
     mostrarHoraColombia();
     setInterval(mostrarHoraColombia, 1000);
@@ -44,7 +47,9 @@ function setupConsoleFilters() {
         // Filtrar errores de extensiones del navegador
         if (message.includes('postMessage on disconnected port') || 
             message.includes('content-script.js') ||
-            message.includes('Failed to get subsystem status')) {
+            message.includes('Failed to get subsystem status') ||
+            message.includes('Extension context invalidated') ||
+            message.includes('Could not establish connection')) {
             return; // No mostrar estos errores
         }
         
@@ -58,7 +63,9 @@ function setupConsoleFilters() {
         const message = args.join(' ');
         
         // Filtrar advertencias de extensiones
-        if (message.includes('postMessage on disconnected port')) {
+        if (message.includes('postMessage on disconnected port') ||
+            message.includes('Extension context invalidated') ||
+            message.includes('Could not establish connection')) {
             return; // No mostrar estas advertencias
         }
         
@@ -66,7 +73,71 @@ function setupConsoleFilters() {
         originalWarn.apply(console, args);
     };
 
+    // Interceptar console.log para filtrar logs de extensiones
+    const originalLog = console.log;
+    console.log = function(...args) {
+        const message = args.join(' ');
+        
+        // Filtrar logs de extensiones del navegador
+        if (message.includes('postMessage on disconnected port') ||
+            message.includes('Extension context invalidated') ||
+            message.includes('Could not establish connection')) {
+            return; // No mostrar estos logs
+        }
+        
+        // Mostrar otros logs normalmente
+        originalLog.apply(console, args);
+    };
+
     console.log('🔇 Filtros de consola configurados para reducir ruido de extensiones');
+}
+
+// Configurar event listeners para botones
+function setupEventListeners() {
+    // Event listener para el botón de despliegue
+    const deployBtn = document.getElementById('deploy-btn');
+    if (deployBtn) {
+        deployBtn.addEventListener('click', (event) => {
+            deployItem(event);
+        });
+    }
+    
+    // Event listener para el botón de limpiar lab
+    const clearLabBtn = document.querySelector('button[onclick="clearLab()"]');
+    if (clearLabBtn) {
+        clearLabBtn.removeAttribute('onclick');
+        clearLabBtn.addEventListener('click', clearLab);
+    }
+    
+    // Event listener para el botón de debug
+    const debugBtn = document.querySelector('button[onclick="checkSystemStatus()"]');
+    if (debugBtn) {
+        debugBtn.removeAttribute('onclick');
+        debugBtn.addEventListener('click', checkSystemStatus);
+    }
+    
+    // Event listener para el botón de reset
+    const resetBtn = document.querySelector('button[onclick="resetSystemState()"]');
+    if (resetBtn) {
+        resetBtn.removeAttribute('onclick');
+        resetBtn.addEventListener('click', resetSystemState);
+    }
+    
+    // Event listener para el botón de menú 3D
+    const menu3dBtn = document.querySelector('button[onclick="toggleFloatingMenu()"]');
+    if (menu3dBtn) {
+        menu3dBtn.removeAttribute('onclick');
+        menu3dBtn.addEventListener('click', toggleFloatingMenu);
+    }
+    
+    // Event listener para el botón de menú toggle
+    const menuToggleBtn = document.querySelector('button[onclick="toggleMenu()"]');
+    if (menuToggleBtn) {
+        menuToggleBtn.removeAttribute('onclick');
+        menuToggleBtn.addEventListener('click', toggleMenu);
+    }
+    
+    console.log('🎯 Event listeners configurados');
 }
 
 // Función principal para iniciar AR
@@ -105,6 +176,12 @@ function startAR() {
 
     // Inicializar sistema de cámara
     initializeCameraSystem();
+
+    // Sincronizar variables globales al iniciar
+    setTimeout(() => {
+        syncGlobalVariables();
+        console.log('🔄 Variables globales sincronizadas al iniciar AR');
+    }, 1000);
 
     console.log('🚀 HomeLab AR inicializado - Listo para desplegar');
 }
@@ -536,19 +613,28 @@ function checkSystemStatus() {
 }
 
 // Desplegar elemento en superficie
-function deployItem() {
+function deployItem(event = null) {
     // Debug: verificar estado antes del despliegue
-    console.log('🚀 Intentando desplegar elemento...');
+    console.log('🚀 Intentando desplegar elemento...', event);
     checkSystemStatus();
     
     // Verificar que haya superficie detectada
     if (!surfaceDetected || !currentSurface) {
         // Solo mostrar alerta si el usuario está intentando desplegar activamente
-        // No mostrar al inicio o cuando no hay interacción del usuario
-        if (document.activeElement === document.getElementById('deploy-btn') || 
-            event?.type === 'click' || 
-            event?.type === 'touchstart') {
+        // Verificar si es una llamada automática o una interacción real del usuario
+        const isUserInteraction = event && (
+            event.type === 'click' || 
+            event.type === 'touchstart' || 
+            event.type === 'mousedown' ||
+            event.isTrusted === true
+        );
+        
+        const isActiveElement = document.activeElement === document.getElementById('deploy-btn');
+        
+        if (isUserInteraction || isActiveElement) {
             Utils.showNotification('❌ Primero escanea una superficie para desplegar elementos', 3000);
+        } else {
+            console.log('🔇 Llamada automática a deployItem ignorada (sin superficie detectada)');
         }
         console.warn('⚠️ Intento de despliegue sin superficie detectada');
         return;

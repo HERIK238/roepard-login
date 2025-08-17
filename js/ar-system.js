@@ -207,6 +207,12 @@ AFRAME.registerSystem('homelab', {
             // Actualizar interfaz
             this.updateUIAfterSurfaceCreation();
 
+            // Sincronizar variables globales con main.js
+            if (typeof window.syncGlobalVariables === 'function') {
+                window.syncGlobalVariables();
+                console.log('🔄 Variables globales sincronizadas desde AR system');
+            }
+
             // Efectos de retroalimentación
             Utils.vibrate([100, 50, 100]);
 
