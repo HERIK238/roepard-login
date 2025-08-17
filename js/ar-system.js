@@ -216,9 +216,19 @@ AFRAME.registerSystem('homelab', {
             // Efectos de retroalimentación
             Utils.vibrate([100, 50, 100]);
 
+            // Notificación de éxito
+            alertify.success('✅ Superficie AR detectada', 3);
+
         } catch (error) {
             console.error('❌ Error al crear superficie:', error);
             this.isScanning = false;
+            Swal.fire({
+                icon: 'error',
+                title: 'Error de Superficie',
+                text: 'No se pudo crear la superficie AR. Intenta escanear de nuevo.',
+                background: '#1e1e1e',
+                color: '#ffffff'
+            });
         }
     },
 
@@ -408,6 +418,13 @@ AFRAME.registerSystem('homelab', {
             console.log('✅ Laboratorio HomeLab reiniciado exitosamente');
         } catch (error) {
             console.error('❌ Error al limpiar laboratorio:', error);
+            Swal.fire({
+                icon: 'error',
+                title: 'Error de Limpieza',
+                text: 'No se pudo reiniciar el laboratorio por completo.',
+                background: '#1e1e1e',
+                color: '#ffffff'
+            });
         }
     },
 

@@ -22,6 +22,13 @@
     <!-- Estilos -->
     <link rel="stylesheet" href="../css/homelab.css" />
     <link rel="stylesheet" href="../css/aframe-styles.css" />
+    <!-- SweetAlert2 -->
+    <link rel="stylesheet" href="../dist/sweetalert2/css/sweetalert2.min.css">
+    <!-- AlertifyJS -->
+    <link rel="stylesheet" href="../dist/alertifyjs/css/alertify.min.css">
+    <link rel="stylesheet" href="../dist/alertifyjs/css/themes/default.min.css">
+    <!-- Boxicons -->
+    <link rel="stylesheet" href="../dist/boxicons/css/boxicons.min.css">
     <!-- Icono -->
     <link rel="icon" href="../favicon.ico" type="image/x-icon" />
   </head>
@@ -182,6 +189,12 @@
         <!-- Audio de fondo -->
         <audio id="background-music" src="../assets/sounds/background_sfx.mp3" preload="auto" loop></audio>
         
+        <!-- Efectos de Sonido para UI -->
+        <audio id="sfx-deploy-interface" src="../assets/sounds/deploy_interfase_sfx.wav" preload="auto"></audio>
+        <audio id="sfx-deploy-object" src="../assets/sounds/deploy_object_sfx.wav" preload="auto"></audio>
+        <audio id="sfx-delete" src="../assets/sounds/delete_sfx.mp3" preload="auto"></audio>
+        <audio id="sfx-reset" src="../assets/sounds/save_sfx.mp3" preload="auto"></audio>
+
         <!-- Servicios HomeLab -->
         <a-mixin
           id="service-base"
@@ -298,10 +311,16 @@
     <script src="../dist/moment/js/moment.js"></script>
     <script src="../dist/moment/js/moment-timezone-with-data.js"></script>
 
+    <!-- SweetAlert2 -->
+    <script src="../dist/sweetalert2/js/sweetalert2.all.min.js"></script>
+    <!-- AlertifyJS -->
+    <script src="../dist/alertifyjs/js/alertify.min.js"></script>
+
     <!-- Homelab Scripts -->
     <script src="../js/homelab-config.js"></script>
     <script src="../js/homelab-data.js"></script>
     <script src="../js/utils.js"></script>
+    <script src="../js/audio-manager.js"></script>
     <script src="../js/aframe-components.js"></script>
     <script src="../js/ar-system.js"></script>
     <script src="../js/main.js"></script>

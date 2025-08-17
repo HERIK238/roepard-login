@@ -102,11 +102,23 @@ function setupEventListeners() {
         });
     }
     
+    // Event listener para el botón de detectar superficie
+    const detectBtn = document.getElementById('detect-btn');
+    if (detectBtn) {
+        detectBtn.addEventListener('click', () => {
+            AudioManager.playSound('interface');
+            detectSurface();
+        });
+    }
+    
     // Event listener para el botón de limpiar lab
     const clearLabBtn = document.querySelector('button[onclick="clearLab()"]');
     if (clearLabBtn) {
         clearLabBtn.removeAttribute('onclick');
-        clearLabBtn.addEventListener('click', clearLab);
+        clearLabBtn.addEventListener('click', () => {
+            AudioManager.playSound('delete');
+            clearLab();
+        });
     }
     
     // Event listener para el botón de debug
@@ -120,7 +132,10 @@ function setupEventListeners() {
     const resetBtn = document.querySelector('button[onclick="resetSystemState()"]');
     if (resetBtn) {
         resetBtn.removeAttribute('onclick');
-        resetBtn.addEventListener('click', resetSystemState);
+        resetBtn.addEventListener('click', () => {
+            AudioManager.playSound('reset');
+            resetSystemState();
+        });
     }
     
     // Event listener para el botón de menú 3D
@@ -183,7 +198,7 @@ function startAR() {
         console.log('🔄 Variables globales sincronizadas al iniciar AR');
     }, 1000);
 
-    console.log('🚀 HomeLab AR inicializado - Listo para desplegar');
+    alertify.success('🚀 HomeLab AR inicializado', 2);
 }
 
 // Alternar visibilidad del menú
@@ -295,7 +310,7 @@ function hideSurfaceDetector() {
 // Detectar superficie
 async function detectSurface() {
     if (isDetecting) {
-        console.log('⏳ Ya se está ejecutando una detección de superficie');
+        alertify.warning('⏳ Detección de superficie en progreso', 2);
         return;
     }
 
@@ -361,43 +376,65 @@ async function detectSurface() {
         // Mostrar error al usuario
         document.getElementById('surface-status').innerHTML =
             '❌ <span style="color: #ff4444;">Error en detección - Inténtalo de nuevo</span>';
+        alertify.error('❌ Error en detección', 3);
     }
 }
 
 // Limpiar laboratorio
 function clearLab() {
-    // Confirmación del usuario
-    if (itemCount > 0) {
-        if (!confirm(`¿Estás seguro de que quieres reiniciar el laboratorio? Se eliminarán ${itemCount} elementos.`)) {
-            return;
+    if (itemCount === 0) {
+        alertify.message('El laboratorio ya está vacío', 2);
+        return;
+    }
+
+    Swal.fire({
+        title: '¿Reiniciar Laboratorio?',
+        html: `Se eliminarán <b>${itemCount}</b> elementos. <br>¡Esta acción no se puede deshacer!`,
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Sí, reiniciar',
+        cancelButtonText: 'Cancelar',
+        background: '#1e1e1e',
+        color: '#ffffff'
+    }).then((result) => {
+        if (result.isConfirmed) {
+            try {
+                // Obtener sistema AR y limpiar
+                const system = document.querySelector('a-scene').systems['homelab'];
+                system.clearLaboratory();
+
+                // Actualizar estado global
+                itemCount = 0;
+
+                // Actualizar UI
+                document.getElementById('item-count').textContent =
+                    Utils.formatItemCount(itemCount);
+                document.getElementById('surface-count').textContent =
+                    Utils.formatSurfaceCount(surfaces.length);
+                document.getElementById('surface-status').innerHTML =
+                    '🧹 <span style="color: #00ff88;">Laboratorio reiniciado</span> - Listo para nuevos despliegues';
+
+                // Actualizar estadísticas rápidas
+                updateQuickStats();
+
+                Swal.fire(
+                    '¡Reiniciado!',
+                    'El laboratorio ha sido limpiado.',
+                    'success'
+                );
+
+            } catch (error) {
+                console.error('❌ Error al limpiar laboratorio:', error);
+                Swal.fire(
+                    '¡Error!',
+                    'No se pudo reiniciar el laboratorio.',
+                    'error'
+                );
+            }
         }
-    }
-
-    try {
-        // Obtener sistema AR y limpiar
-        const system = document.querySelector('a-scene').systems['homelab'];
-        system.clearLaboratory();
-
-        // Actualizar estado global
-        itemCount = 0;
-
-        // Actualizar UI
-        document.getElementById('item-count').textContent =
-            Utils.formatItemCount(itemCount);
-        document.getElementById('surface-count').textContent =
-            Utils.formatSurfaceCount(surfaces.length);
-        document.getElementById('surface-status').innerHTML =
-            '🧹 <span style="color: #00ff88;">Laboratorio reiniciado</span> - Listo para nuevos despliegues';
-
-        // Actualizar estadísticas rápidas
-        updateQuickStats();
-
-        console.log('🗑️ Laboratorio HomeLab reiniciado completamente');
-
-    } catch (error) {
-        console.error('❌ Error al limpiar laboratorio:', error);
-        alert('❌ Error al reiniciar laboratorio. Recarga la página si persiste.');
-    }
+    });
 }
 
 // Inicializar lista de páginas disponibles
@@ -443,6 +480,7 @@ function selectCategory(category) {
         return;
     }
 
+    AudioManager.playSound('interface');
     currentCategory = category;
 
     // Actualizar botones de categoría
@@ -620,34 +658,20 @@ function deployItem(event = null) {
     
     // Verificar que haya superficie detectada
     if (!surfaceDetected || !currentSurface) {
-        // Solo mostrar alerta si el usuario está intentando desplegar activamente
-        // Verificar si es una llamada automática o una interacción real del usuario
-        const isUserInteraction = event && (
-            event.type === 'click' || 
-            event.type === 'touchstart' || 
-            event.type === 'mousedown' ||
-            event.isTrusted === true
-        );
-        
-        const isActiveElement = document.activeElement === document.getElementById('deploy-btn');
-        
-        if (isUserInteraction || isActiveElement) {
-            Utils.showNotification('❌ Primero escanea una superficie para desplegar elementos', 3000);
-        } else {
-            console.log('🔇 Llamada automática a deployItem ignorada (sin superficie detectada)');
-        }
+        alertify.error('❌ Escanea una superficie primero', 3);
         console.warn('⚠️ Intento de despliegue sin superficie detectada');
         return;
     }
 
     // Verificar categoría válida
     if (!homelabItems[currentCategory]) {
-        Utils.showNotification('❌ Categoría no válida seleccionada', 3000);
+        alertify.warning('⚠️ Categoría no válida', 2);
         console.error('❌ Categoría inválida:', currentCategory);
         return;
     }
 
     try {
+        AudioManager.playSound('object');
         // Obtener sistema AR
         const system = document.querySelector('a-scene').systems['homelab'];
         
@@ -657,7 +681,7 @@ function deployItem(event = null) {
             const selectedPage = availablePages.find(p => p.id === selectedPageId) || availablePages[0];
             
             if (!selectedPage) {
-                Utils.showNotification('❌ No hay páginas disponibles', 3000);
+                alertify.error('❌ No hay páginas disponibles', 3);
                 return;
             }
             
@@ -695,7 +719,8 @@ function deployItem(event = null) {
         Utils.vibrate([80, 40, 160]);
 
         // Mostrar notificación de éxito
-        Utils.showNotification(`✅ ${currentCategory === 'pages' ? 'Página' : 'Elemento'} desplegado exitosamente`, 2000);
+        const itemName = currentCategory === 'pages' ? 'Página' : 'Elemento';
+        alertify.success(`✅ ${itemName} desplegado`, 2);
 
         console.log(`🚀 Elemento desplegado: ${currentCategory}`);
         
@@ -704,7 +729,13 @@ function deployItem(event = null) {
 
     } catch (error) {
         console.error('❌ Error al desplegar elemento:', error);
-        Utils.showNotification('❌ Error al desplegar elemento. Inténtalo de nuevo.', 3000);
+        Swal.fire({
+            icon: 'error',
+            title: 'Error de Despliegue',
+            text: 'No se pudo desplegar el elemento. Inténtalo de nuevo.',
+            background: '#1e1e1e',
+            color: '#ffffff'
+        });
     }
 }
 
