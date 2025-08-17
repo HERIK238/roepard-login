@@ -1,0 +1,201 @@
+/* ========================================
+   ESTILOS PARA COMPONENTES A-FRAME
+   ======================================== */
+
+/* Estilos para botones del menú 3D */
+.menu-button {
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.menu-button:hover {
+    transform: scale(1.1);
+}
+
+/* Estilos para elementos interactivos */
+.interactive {
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.interactive:hover {
+    transform: scale(1.05);
+}
+
+/* Estilos para elementos del HomeLab */
+.homelab-item {
+    transition: all 0.3s ease;
+}
+
+.homelab-item:hover {
+    transform: scale(1.02);
+}
+
+/* Estilos para superficies detectadas */
+.detected-surface {
+    transition: opacity 0.5s ease;
+}
+
+/* Estilos para elementos de texto holográfico */
+.holographic-text {
+    font-family: 'Roboto', sans-serif;
+    text-shadow: 0 0 10px currentColor;
+}
+
+/* Estilos para efectos de partículas */
+.particle-system {
+    pointer-events: none;
+}
+
+/* Estilos para elementos de menú flotante */
+.floating-menu-3d {
+    pointer-events: auto;
+}
+
+/* Estilos para elementos de superficie */
+.surface-target {
+    pointer-events: auto;
+}
+
+/* Estilos para elementos de interacción */
+.interactive-page {
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.interactive-page:hover {
+    transform: scale(1.05);
+    box-shadow: 0 0 20px rgba(0, 255, 136, 0.5);
+}
+
+/* Estilos para elementos de texto 3D */
+.a-text {
+    font-family: 'Roboto', sans-serif;
+    text-rendering: optimizeLegibility;
+}
+
+/* Estilos para entidades A-Frame */
+.a-entity {
+    transition: all 0.2s ease;
+}
+
+/* Estilos para elementos de geometría */
+.a-box, .a-sphere, .a-cylinder, .a-plane {
+    transition: all 0.3s ease;
+}
+
+/* Estilos para elementos de luz */
+.a-light {
+    pointer-events: none;
+}
+
+/* Estilos para elementos de cámara */
+.a-camera {
+    pointer-events: none;
+}
+
+/* Estilos para elementos de cursor */
+.a-cursor {
+    pointer-events: none;
+}
+
+/* Estilos para elementos de raycaster */
+.a-raycaster {
+    pointer-events: none;
+}
+
+/* Estilos para elementos de animación */
+.a-animation {
+    pointer-events: none;
+}
+
+/* Estilos para elementos de material */
+.a-material {
+    pointer-events: none;
+}
+
+/* Estilos para elementos de geometría personalizada */
+.a-gltf-model {
+    transition: all 0.3s ease;
+}
+
+/* Estilos para elementos de video */
+.a-video {
+    transition: all 0.3s ease;
+}
+
+/* Estilos para elementos de imagen */
+.a-image {
+    transition: all 0.3s ease;
+}
+
+/* Estilos para elementos de audio */
+.a-sound {
+    pointer-events: none;
+}
+
+/* Estilos para elementos de ambiente */
+.a-sky {
+    pointer-events: none;
+}
+
+/* Estilos para elementos de terreno */
+.a-terrain {
+    pointer-events: none;
+}
+
+/* Estilos para elementos de agua */
+.a-ocean {
+    pointer-events: none;
+}
+
+/* Estilos para elementos de niebla */
+.a-fog {
+    pointer-events: none;
+}
+
+/* Estilos para elementos de partículas personalizadas */
+.particle-custom {
+    pointer-events: none;
+    transition: all 0.1s ease;
+}
+
+/* Estilos para elementos de interfaz 3D */
+.ui-3d {
+    pointer-events: auto;
+    transition: all 0.3s ease;
+}
+
+.ui-3d:hover {
+    transform: scale(1.05);
+}
+
+/* Estilos para elementos de navegación 3D */
+.nav-3d {
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.nav-3d:hover {
+    transform: scale(1.1);
+}
+
+/* Estilos para elementos de información 3D */
+.info-3d {
+    pointer-events: none;
+    transition: opacity 0.3s ease;
+}
+
+/* Estilos para elementos de control 3D */
+.control-3d {
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.control-3d:hover {
+    transform: scale(1.05);
+}
+
+.control-3d:active {
+    transform: scale(0.95);
+}

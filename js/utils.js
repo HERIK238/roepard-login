@@ -40,6 +40,8 @@ class Utils {
 
     // Aplicar efecto glitch a elemento
     static applyGlitchEffect(element, duration = 300) {
+        if (!element) return;
+        
         element.classList.add('glitch');
         setTimeout(() => {
             element.classList.remove('glitch');
@@ -48,13 +50,19 @@ class Utils {
 
     // Obtener configuración de categoría
     static getCategoryConfig(category) {
-        return categoryConfig[category] || categoryConfig.services;
+        if (typeof categoryConfig !== 'undefined') {
+            return categoryConfig[category] || categoryConfig.services;
+        }
+        return null;
     }
 
     // Obtener elemento aleatorio de categoría
     static getRandomItem(category) {
-        const items = homelabItems[category] || homelabItems.services;
-        return items[Math.floor(Math.random() * items.length)];
+        if (typeof homelabItems !== 'undefined') {
+            const items = homelabItems[category] || homelabItems.services;
+            return items[Math.floor(Math.random() * items.length)];
+        }
+        return null;
     }
 
     // Formatear contador de elementos
@@ -105,8 +113,16 @@ class Utils {
 
     // Calcular posición de superficie frente a cámara
     static calculateSurfacePosition(camera, distance = 2.5) {
+        if (!camera) {
+            return { x: 0, y: -1.3, z: -2.5 };
+        }
+
         const cameraPos = camera.getAttribute('position');
         const cameraRot = camera.getAttribute('rotation');
+
+        if (!cameraPos || !cameraRot) {
+            return { x: 0, y: -1.3, z: -2.5 };
+        }
 
         return {
             x: cameraPos.x + Math.sin(cameraRot.y * Math.PI / 180) * distance,
@@ -151,27 +167,96 @@ class Utils {
     // Limpiar elementos desplegados
     static clearDeployedItems() {
         const container = document.getElementById('homelab-container');
-        while (container.firstChild) {
-            container.removeChild(container.firstChild);
+        if (container) {
+            while (container.firstChild) {
+                container.removeChild(container.firstChild);
+            }
+            
+            // Actualizar contador global
+            if (typeof window !== 'undefined') {
+                window.itemCount = 0;
+            }
         }
     }
 
     // Limpiar superficies detectadas
     static clearDetectedSurfaces() {
         const container = document.getElementById('surfaces-container');
-        while (container.firstChild) {
-            container.removeChild(container.firstChild);
+        if (container) {
+            while (container.firstChild) {
+                container.removeChild(container.firstChild);
+            }
+            
+            // Actualizar contador global
+            if (typeof window !== 'undefined') {
+                window.surfaces = [];
+                window.surfaceDetected = false;
+                window.currentSurface = null;
+            }
         }
     }
 
-    static getRandomSurfacePosition(surfacePos, radius = 2.5) {
-        const offsetX = (Math.random() - 0.5) * radius;
-        const offsetZ = (Math.random() - 0.5) * radius;
+    // Validar si un elemento existe en el DOM
+    static elementExists(selector) {
+        return document.querySelector(selector) !== null;
+    }
 
+    // Crear notificación temporal
+    static showNotification(message, duration = 3000) {
+        const notification = document.createElement('div');
+        notification.className = 'homelab-notification';
+        notification.textContent = message;
+        notification.style.cssText = `
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: #00ff88;
+            color: #000;
+            padding: 15px 20px;
+            border-radius: 8px;
+            z-index: 10000;
+            font-family: 'Roboto', sans-serif;
+            font-weight: bold;
+            box-shadow: 0 4px 12px rgba(0,255,136,0.3);
+            transform: translateX(100%);
+            transition: transform 0.3s ease;
+        `;
+
+        document.body.appendChild(notification);
+
+        // Animar entrada
+        setTimeout(() => {
+            notification.style.transform = 'translateX(0)';
+        }, 100);
+
+        // Animar salida y remover
+        setTimeout(() => {
+            notification.style.transform = 'translateX(100%)';
+            setTimeout(() => {
+                if (notification.parentNode) {
+                    notification.parentNode.removeChild(notification);
+                }
+            }, 300);
+        }, duration);
+    }
+
+    // Generar ID único
+    static generateUniqueId() {
+        return 'homelab_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
+    }
+
+    // Verificar si el dispositivo soporta características específicas
+    static checkDeviceCapabilities() {
         return {
-            x: surfacePos.x + offsetX,
-            y: surfacePos.y + 0.15,
-            z: surfacePos.z + offsetZ
+            webxr: !!navigator.xr,
+            vibration: !!navigator.vibrate,
+            touch: 'ontouchstart' in window,
+            mobile: /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)
         };
     }
+}
+
+// Exportar para uso global
+if (typeof window !== 'undefined') {
+    window.Utils = Utils;
 }

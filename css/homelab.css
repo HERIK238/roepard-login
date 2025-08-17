@@ -673,3 +673,57 @@ body {
     background: rgba(255, 68, 68, 1);
     transform: scale(1.1);
 }
+
+/* Botón de debug */
+.debug-btn {
+    background: linear-gradient(135deg, #ffaa00, #ff8800);
+    color: #000;
+    font-size: 0.8em;
+    padding: 8px 12px;
+    margin-left: 5px;
+}
+
+.debug-btn:hover {
+    background: linear-gradient(135deg, #ffcc00, #ffaa00);
+    transform: scale(1.05);
+}
+
+.debug-btn:active {
+    transform: scale(0.95);
+}
+
+/* Botón de reset */
+.reset-btn {
+    background: linear-gradient(135deg, #ff4444, #cc0000);
+    color: #fff;
+    font-size: 0.8em;
+    padding: 8px 12px;
+    margin-left: 5px;
+}
+
+.reset-btn:hover {
+    background: linear-gradient(135deg, #ff6666, #ff4444);
+    transform: scale(1.05);
+}
+
+.reset-btn:active {
+    transform: scale(0.95);
+}
+
+/* Botón del menú 3D */
+.menu3d-btn {
+    background: linear-gradient(135deg, #8e44ad, #6c3483);
+    color: #fff;
+    font-size: 0.8em;
+    padding: 8px 12px;
+    margin-left: 5px;
+}
+
+.menu3d-btn:hover {
+    background: linear-gradient(135deg, #9b59b6, #8e44ad);
+    transform: scale(1.05);
+}
+
+.menu3d-btn:active {
+    transform: scale(0.95);
+}

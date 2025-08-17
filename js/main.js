@@ -7,15 +7,13 @@ let currentCategory = 'services';
 let surfaces = [];
 let menuExpanded = false;
 let menuIndicatorTimeout;
-let xrHitTestSource = null;
-let xrRefSpace = null;
-let selectionTimer = null;
-let selectionStartTime = null;
-let currentSelectionTarget = null;
 
 // Inicialización del sistema cuando se carga la página
 document.addEventListener('DOMContentLoaded', function () {
     console.log('🚀 HomeLab AR - Sistema inicializado');
+
+    // Configurar filtros de consola para reducir ruido
+    setupConsoleFilters();
 
     // Verificar compatibilidad WebXR si está disponible
     if (navigator.xr) {
@@ -36,6 +34,41 @@ document.addEventListener('DOMContentLoaded', function () {
     setInterval(mostrarHoraColombia, 1000);
 });
 
+// Configurar filtros de consola para reducir ruido de extensiones
+function setupConsoleFilters() {
+    // Interceptar console.error para filtrar errores de extensiones
+    const originalError = console.error;
+    console.error = function(...args) {
+        const message = args.join(' ');
+        
+        // Filtrar errores de extensiones del navegador
+        if (message.includes('postMessage on disconnected port') || 
+            message.includes('content-script.js') ||
+            message.includes('Failed to get subsystem status')) {
+            return; // No mostrar estos errores
+        }
+        
+        // Mostrar otros errores normalmente
+        originalError.apply(console, args);
+    };
+
+    // Interceptar console.warn para filtrar advertencias de extensiones
+    const originalWarn = console.warn;
+    console.warn = function(...args) {
+        const message = args.join(' ');
+        
+        // Filtrar advertencias de extensiones
+        if (message.includes('postMessage on disconnected port')) {
+            return; // No mostrar estas advertencias
+        }
+        
+        // Mostrar otras advertencias normalmente
+        originalWarn.apply(console, args);
+    };
+
+    console.log('🔇 Filtros de consola configurados para reducir ruido de extensiones');
+}
+
 // Función principal para iniciar AR
 function startAR() {
     // Ocultar overlay inicial
@@ -52,6 +85,9 @@ function startAR() {
     document.getElementById('controls').classList.remove('hide');
     document.getElementById('controls').classList.add('expanded');
     menuExpanded = true;
+
+    // Asegurar que el menú 3D esté oculto al inicio
+    hideFloatingMenu();
 
     // Auto-minimizar después de 5 segundos
     setTimeout(() => {
@@ -79,7 +115,7 @@ function toggleMenu() {
     const menuToggle = document.getElementById('menu-toggle');
     const menuClosedIndicator = document.getElementById('menu-closed-indicator');
     const quickStats = document.getElementById('quick-stats');
-    const pagesPanel = document.getElementById('pages-panel'); // Panel de páginas
+    const pagesPanel = document.getElementById('pages-panel');
 
     menuExpanded = !menuExpanded;
 
@@ -149,7 +185,8 @@ function updateQuickStats() {
             services: 'Servicios',
             pets: 'Mascotas',
             games: 'Juegos',
-            tools: 'Herramientas'
+            tools: 'Herramientas',
+            pages: 'Páginas'
         };
 
         document.getElementById('quick-category').textContent = `📂 ${categoryNames[currentCategory]}`;
@@ -167,7 +204,6 @@ function initializeCameraSystem() {
         // Configurar eventos de cámara si es necesario
         const camera = document.getElementById('cameraRig');
         if (camera) {
-            // Eventos de cámara pueden ir aquí
             console.log('📷 Cámara AR lista');
         }
     });
@@ -218,6 +254,13 @@ async function detectSurface() {
             setTimeout(() => {
                 document.getElementById('surface-detector').classList.add('hide');
             }, 1000);
+            
+            // Sincronizar variables globales después de detectar superficie
+            setTimeout(() => {
+                syncGlobalVariables();
+                console.log('🔄 Variables sincronizadas después de detectar superficie');
+            }, 500);
+            
             // Actualizar botón con éxito
             detectBtn.textContent = '✅ Superficie Lista';
 
@@ -315,13 +358,6 @@ function initializePagesList() {
     }
 }
 
-// Mostrar/ocultar panel de páginas
-function togglePagesPanel() {
-    const pagesPanel = document.getElementById('pages-panel');
-    pagesPanel.classList.toggle('hide');
-}
-
-
 // Seleccionar categoría de elementos
 function selectCategory(category) {
     // Verificar categoría válida
@@ -367,9 +403,8 @@ function selectCategory(category) {
     console.log(`📂 Categoría seleccionada: ${category}`);
 }
 
-// Agregar función para mostrar hora actual
+// Función para mostrar hora actual en Colombia
 function mostrarHoraColombia() {
-    // Obtener la hora actual en Colombia
     const horaColombia = moment().tz("America/Bogota").format("HH:mm:ss YYYY-MM-DD Z");
     const uamDate = document.getElementById("uam-date");
     if (uamDate) {
@@ -377,18 +412,151 @@ function mostrarHoraColombia() {
     }
 }
 
+// Función para mostrar el menú 3D flotante
+function showFloatingMenu() {
+    const floatingMenu = document.getElementById('floating-menu-3d');
+    if (floatingMenu) {
+        floatingMenu.setAttribute('visible', true);
+        console.log('🎛️ Menú 3D flotante mostrado');
+    }
+}
+
+// Función para ocultar el menú 3D flotante
+function hideFloatingMenu() {
+    const floatingMenu = document.getElementById('floating-menu-3d');
+    if (floatingMenu) {
+        floatingMenu.setAttribute('visible', false);
+        console.log('🎛️ Menú 3D flotante oculto');
+    }
+}
+
+// Función para alternar la visibilidad del menú 3D flotante
+function toggleFloatingMenu() {
+    const floatingMenu = document.getElementById('floating-menu-3d');
+    if (floatingMenu) {
+        const isVisible = floatingMenu.getAttribute('visible');
+        if (isVisible) {
+            hideFloatingMenu();
+        } else {
+            showFloatingMenu();
+        }
+    }
+}
+
+// Función para reinicializar el estado del sistema
+function resetSystemState() {
+    console.log('🔄 Reinicializando estado del sistema...');
+    
+    // Limpiar variables globales
+    surfaceDetected = false;
+    currentSurface = null;
+    itemCount = 0;
+    surfaces = [];
+    
+    // Ocultar menú 3D flotante
+    hideFloatingMenu();
+    
+    // Sincronizar con el sistema AR
+    syncGlobalVariables();
+    
+    // Actualizar UI
+    const deployBtn = document.getElementById('deploy-btn');
+    if (deployBtn) {
+        deployBtn.disabled = true;
+    }
+    
+    const statusElement = document.getElementById('surface-status');
+    if (statusElement) {
+        statusElement.innerHTML = '🔍 Inicializando escáner de superficies...';
+    }
+    
+    // Actualizar contadores
+    const itemCountElement = document.getElementById('item-count');
+    if (itemCountElement) {
+        itemCountElement.textContent = Utils.formatItemCount(0);
+    }
+    
+    const surfaceCountElement = document.getElementById('surface-count');
+    if (surfaceCountElement) {
+        surfaceCountElement.textContent = Utils.formatSurfaceCount(0);
+    }
+    
+    console.log('✅ Estado del sistema reinicializado');
+    checkSystemStatus();
+}
+
+// Función para sincronizar variables globales con el sistema AR
+function syncGlobalVariables() {
+    const scene = document.querySelector('a-scene');
+    if (scene && scene.systems['homelab']) {
+        const system = scene.systems['homelab'];
+        
+        // Sincronizar variables de superficie
+        if (system.detectedSurfaces && system.detectedSurfaces.length > 0) {
+            surfaceDetected = true;
+            currentSurface = system.detectedSurfaces[system.detectedSurfaces.length - 1];
+            surfaces = [...system.detectedSurfaces];
+            
+            console.log('🔄 Variables globales sincronizadas:', {
+                surfaceDetected,
+                currentSurface: currentSurface ? 'existe' : 'no existe',
+                surfacesCount: surfaces.length
+            });
+        }
+        
+        // Sincronizar contador de elementos
+        if (system.deployedItems) {
+            itemCount = system.deployedItems.length;
+            console.log('🔄 Contador de elementos sincronizado:', itemCount);
+        }
+    }
+}
+
+// Función para verificar el estado actual del sistema
+function checkSystemStatus() {
+    console.log('🔍 Estado del sistema HomeLab AR:', {
+        surfaceDetected: surfaceDetected,
+        currentSurface: currentSurface ? 'existe' : 'no existe',
+        surfacesCount: surfaces.length,
+        itemCount: itemCount,
+        currentCategory: currentCategory,
+        menuExpanded: menuExpanded
+    });
+    
+    // Verificar variables globales del sistema AR
+    const scene = document.querySelector('a-scene');
+    if (scene && scene.systems['homelab']) {
+        const system = scene.systems['homelab'];
+        console.log('🔍 Estado del sistema AR:', {
+            detectedSurfaces: system.detectedSurfaces.length,
+            deployedItems: system.deployedItems.length,
+            isScanning: system.isScanning
+        });
+    }
+}
+
 // Desplegar elemento en superficie
 function deployItem() {
+    // Debug: verificar estado antes del despliegue
+    console.log('🚀 Intentando desplegar elemento...');
+    checkSystemStatus();
+    
     // Verificar que haya superficie detectada
     if (!surfaceDetected || !currentSurface) {
-        alert('❌ Primero escanea una superficie para desplegar elementos');
+        // Solo mostrar alerta si el usuario está intentando desplegar activamente
+        // No mostrar al inicio o cuando no hay interacción del usuario
+        if (document.activeElement === document.getElementById('deploy-btn') || 
+            event?.type === 'click' || 
+            event?.type === 'touchstart') {
+            Utils.showNotification('❌ Primero escanea una superficie para desplegar elementos', 3000);
+        }
         console.warn('⚠️ Intento de despliegue sin superficie detectada');
         return;
     }
 
     // Verificar categoría válida
     if (!homelabItems[currentCategory]) {
-        alert('❌ Categoría no válida seleccionada');
+        Utils.showNotification('❌ Categoría no válida seleccionada', 3000);
         console.error('❌ Categoría inválida:', currentCategory);
         return;
     }
@@ -403,7 +571,7 @@ function deployItem() {
             const selectedPage = availablePages.find(p => p.id === selectedPageId) || availablePages[0];
             
             if (!selectedPage) {
-                alert('❌ No hay páginas disponibles');
+                Utils.showNotification('❌ No hay páginas disponibles', 3000);
                 return;
             }
             
@@ -414,19 +582,19 @@ function deployItem() {
             
             // Crear página interactiva
             const pageData = {
-                name: selectedPage.title.replace(/[^\w\s]/g, ''), // Remover emojis
+                name: selectedPage.title.replace(/[^\w\s]/g, ''),
                 emoji: selectedPage.title.match(/^[^\w\s]+/)?.[0] || '📄',
                 description: selectedPage.description,
                 color: '#4A90E2',
                 url: `../pages/${selectedPage.file}`
             };
             
-            const deployedElement = system.createInteractivePage(pageData, 
+            system.createInteractivePage(pageData, 
                 `${itemPosition.x} ${itemPosition.y} ${itemPosition.z}`);
             
         } else {
             // Comportamiento normal para otras categorías
-            const deployedElement = system.createDeployedItem(currentCategory, currentSurface);
+            system.createDeployedItem(currentCategory, currentSurface);
         }
 
         // Incrementar contador
@@ -440,112 +608,19 @@ function deployItem() {
         // Feedback táctil
         Utils.vibrate([80, 40, 160]);
 
+        // Mostrar notificación de éxito
+        Utils.showNotification(`✅ ${currentCategory === 'pages' ? 'Página' : 'Elemento'} desplegado exitosamente`, 2000);
+
         console.log(`🚀 Elemento desplegado: ${currentCategory}`);
+        
+        // Debug: verificar estado después del despliegue
+        checkSystemStatus();
 
     } catch (error) {
         console.error('❌ Error al desplegar elemento:', error);
-        alert('❌ Error al desplegar elemento. Inténtalo de nuevo.');
+        Utils.showNotification('❌ Error al desplegar elemento. Inténtalo de nuevo.', 3000);
     }
 }
-
-function startSelectionDetection() {
-    const scene = document.querySelector('a-scene');
-    const cursor = document.getElementById('cursor');
-    const selectionIndicator = document.getElementById('selection-indicator');
-    const selectionTimerEl = document.getElementById('selection-timer');
-    
-    // Evento cuando el cursor intersecta con un elemento
-    scene.addEventListener('raycaster-intersection', function(evt) {
-        const intersectedEl = evt.detail.els[0];
-        if (intersectedEl && intersectedEl.classList.contains('interactive')) {
-            currentSelectionTarget = intersectedEl;
-            selectionIndicator.classList.remove('hide');
-            
-            // Iniciar temporizador
-            selectionStartTime = Date.now();
-            updateSelectionTimer();
-            
-            // Iniciar actualización del temporizador
-            selectionTimer = setInterval(updateSelectionTimer, 100);
-        }
-    });
-    
-    // Evento cuando el cursor deja de intersectar
-    scene.addEventListener('raycaster-intersection-cleared', function(evt) {
-        clearSelectionTimer();
-        selectionIndicator.classList.add('hide');
-        currentSelectionTarget = null;
-    });
-    
-    // Función para actualizar el temporizador
-    function updateSelectionTimer() {
-        if (!selectionStartTime || !currentSelectionTarget) return;
-        
-        const elapsed = Date.now() - selectionStartTime;
-        const remaining = Math.max(0, 3000 - elapsed);
-        const seconds = Math.ceil(remaining / 1000);
-        
-        selectionTimerEl.textContent = `${seconds}s`;
-        
-        // Cambiar color según tiempo restante
-        const dot = document.querySelector('.selection-dot');
-        if (seconds <= 1) {
-            dot.style.background = '#ff4444';
-            dot.style.boxShadow = '0 0 15px #ff4444';
-        } else {
-            dot.style.background = '#00ff88';
-            dot.style.boxShadow = '0 0 15px #00ff88';
-        }
-        
-        // Activar selección después de 3 segundos
-        if (elapsed >= 3000) {
-            activateSelection();
-        }
-    }
-    
-    // Función para limpiar el temporizador
-    function clearSelectionTimer() {
-        if (selectionTimer) {
-            clearInterval(selectionTimer);
-            selectionTimer = null;
-        }
-        selectionStartTime = null;
-        selectionTimerEl.textContent = '';
-    }
-    
-    // Función para activar la selección
-    function activateSelection() {
-        if (!currentSelectionTarget) return;
-        
-        // Efecto visual
-        currentSelectionTarget.setAttribute('animation__select', {
-            property: 'scale',
-            to: '1.2 1.2 1.2',
-            dur: 200,
-            dir: 'alternate'
-        });
-        
-        // Activar el elemento (simular clic)
-        const clickEvent = new MouseEvent('click', {
-            view: window,
-            bubbles: true,
-            cancelable: true
-        });
-        currentSelectionTarget.dispatchEvent(clickEvent);
-        
-        // Feedback táctil
-        if (navigator.vibrate) {
-            navigator.vibrate([50, 50, 50]);
-        }
-        
-        // Limpiar selección
-        clearSelectionTimer();
-        selectionIndicator.classList.add('hide');
-        currentSelectionTarget = null;
-    }
-}
-
-
 
 // Manejo de errores globales
 window.addEventListener('error', (event) => {
